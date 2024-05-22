@@ -2,9 +2,9 @@
 
 ## Abigail Escamilla
 
-### date x
+### 5/22/24
 
-info
+  Doing research for AES presentation, added information to notes.txt.
 
 ### date y
 
