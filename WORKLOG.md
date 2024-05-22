@@ -1,6 +1,6 @@
 # Work Log
 
-## GROUP MEMBER 1
+## Abigail Escamilla
 
 ### date x
 
@@ -11,7 +11,7 @@ info
 info
 
 
-## GROUP MEMBER 2
+## Brandon Chao
 
 ### date x
 
