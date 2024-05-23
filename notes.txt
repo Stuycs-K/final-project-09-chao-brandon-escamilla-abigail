@@ -2,3 +2,10 @@
 AES or Advanced Encryption Standard is a specification for the encryption of electronic data. 
 A variant of the Rjindael cipher, AES is a block cipher that uses a key size of a certain amount of bits to encrypt data. 
 Key sizes include: 128, 192, and 256 bits. AES encrypts data in blocks of 128 bits each. 
+There are different modes of encryption for AES, each with their own benefits and varying effectiveness. To avoid EBC, which directly encrypts each plaintext block without differences, we will likely utilize CBC (Cipher Block Chaining), as it is algorithmically more secure.
+There are four main functions used in AES: SubBytes, ShiftRows, MixColumns, and AddRoundKey.
+SubBytes is a non-linear substitution step where each byte in the "state" (the 4x4 block of bytes) is substituted by a corresponding byte from the S-Box.
+ShiftRows is a transposition step where each row is shifted left by different increments.
+MixColumns is a step which operates on the columns of the state in a way which involves relating them to polynomial constants and polynomial manipulation (multiplication and modulo).
+AddRoundKey is a simple step which XORs each byte of the state with a byte from the round key.
+There are some constants used in AES, such as the Rijndael S-Box (substitution box), RCon (Round Constants), and MixColumns Constants.
