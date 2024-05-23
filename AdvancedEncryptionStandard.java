@@ -23,3 +23,22 @@ public static int[] sBox = { // better as a one dimensional array
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
 };
 
+public static int[] rCon = {
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
+};
+
+public static int[] addRoundKey(int[] state, int[] roundKey){
+    int[] newRoundKey = int[16];
+
+    for (int i = 0; i < 16; i++){
+        newRoundKey[i] = state[i] ^ roundKey[i];
+    }
+
+    return newRoundKey;
+}
+
+public static void subBytes(int[] state){
+    for (int i = 0; i < state.length; i++){
+        state[i] = sBox[state[i]];
+    }
+}
