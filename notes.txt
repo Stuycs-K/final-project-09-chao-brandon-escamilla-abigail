@@ -2,10 +2,25 @@
 AES or Advanced Encryption Standard is a specification for the encryption of electronic data. 
 A variant of the Rjindael cipher, AES is a block cipher that uses a key size of a certain amount of bits to encrypt data. 
 Key sizes include: 128, 192, and 256 bits. AES encrypts data in blocks of 128 bits each. 
-There are different modes of encryption for AES, each with their own benefits and varying effectiveness. To avoid EBC, which directly encrypts each plaintext block without differences, we will likely utilize CBC (Cipher Block Chaining), as it is algorithmically more secure.
+There are different modes of encryption for AES, each with their own benefits and varying effectiveness.
+The five modes include ECB (Electronic code book), cbc, cfb (cipher feedback), ofb (output feedback), ctr (counter).
+
+ECB is the most simple of all the modes (and is generally not used due to its weaknesses): Every block is encrypted with the same key and same algorithm.
+CBC: CBC uses an initialization vector (IV), usually a random number, which is the same size as the block. The plaintext block is then xored with the IV before it is encrypted into a ciphertext block. What makes CBC more secure is that once the first block is encrypted, it is also used to xor it with the next plaintext block so each ciphertext block is different. Any plaintext and ciphertext block affects the other blocks in CBC, so if even one bit is wrong in the IV, all the data will be broken. 
+(Susceptible to attacks from chosen cipher attacks and padding attacks)
+CFB: CFB allows the block encryptor to be used as a stream cipher and also requires an IV. This mode encrypts the IV before xoring it with the plaintext block to get the ciphertext. The ciphertext block is then encrypted once again before being used to xor it against the next plaintext block. This mode does not encrypt plaintext directly but just uses ciphertext to xor the plaintext, meaning each block affects the rest as well. 
+(Also susceptible to chosen cipher attack).
+OFB: the IV is encrypted which is then used to xor the plaintext to get the ciphertext. Unlike CFB, it always encrypts the IV again before its used to xor the other plaintext blocks (rather than the ciphertext blocks being used to xor). 
+(Susceptible to cca and padding attack)
+
+To avoid EBC, which directly encrypts each plaintext block without differences, we will likely utilize CBC (Cipher Block Chaining), as it is algorithmically more secure.
+
 There are four main functions used in AES: SubBytes, ShiftRows, MixColumns, and AddRoundKey.
 SubBytes is a non-linear substitution step where each byte in the "state" (the 4x4 block of bytes) is substituted by a corresponding byte from the S-Box.
 ShiftRows is a transposition step where each row is shifted left by different increments.
 MixColumns is a step which operates on the columns of the state in a way which involves relating them to polynomial constants and polynomial manipulation (multiplication and modulo).
 AddRoundKey is a simple step which XORs each byte of the state with a byte from the round key.
 There are some constants used in AES, such as the Rijndael S-Box (substitution box), RCon (Round Constants), and MixColumns Constants.
+
+
+
