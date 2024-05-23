@@ -13,9 +13,9 @@ info
 
 ## Brandon Chao
 
-### date x
+### 5/22/24
 
-info
+  Added to the research documented in notes.txt on AES, particularly the main functions and modes of AES.
 
 ### date y
 
