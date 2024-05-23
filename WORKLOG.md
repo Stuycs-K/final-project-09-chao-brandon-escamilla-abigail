@@ -6,6 +6,10 @@
 
   Doing research for AES presentation, added information to notes.txt.
 
+### 5/23/24
+
+  Researching the different modes for AES encryption (including ecb, cbc, cfb, and obc). 
+
 ### date y
 
 info
