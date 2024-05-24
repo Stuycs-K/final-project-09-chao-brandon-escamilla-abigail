@@ -17,9 +17,10 @@ public class AdvancedEncryptionStandard {
         for (int val : newState) {
             System.out.print(String.format("%02x ", val));
         }
+        System.out.println();
     }
 
-    public static int[] sBox = { // better as a one dimensional array
+    public static final int[] sBox = { // better as a one dimensional array
         0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
         0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
         0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
@@ -38,24 +39,34 @@ public class AdvancedEncryptionStandard {
         0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
     };
 
-    public static int[] rCon = {
+    public static final int[] rCon = {
         0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
     };
 
-public static int[] addRoundKey(int[] state, int[] roundKey){
-    int[] newRoundKey = new int[16];
-
-    for (int i = 0; i < 16; i++){
-        newRoundKey[i] = state[i] ^ roundKey[i];
+    public static int[] addRoundKey(int[] state, int[] roundKey){
+        for (int i = 0; i < 16; i++){
+            state[i] ^= roundKey[i];
+        }
+        return state;
     }
 
-    return newRoundKey;
-}
-
-    public static void subBytes(int[] state){
-        for (int i = 0; i < state.length; i++) {
+    public static int[] subBytes(int[] state){
+        for (int i = 0; i < state.length; i++){
             state[i] = sBox[state[i]];
         }
+        return state;
+    }
+
+    public static int[] invSubBytes(int[] state){
+        int[] invSBox = new int[256];
+        for (int i = 0; i < 256; i++){
+            invSBox[sBox[i]] = i;
+        }
+
+        for (int i = 0; i < state.length; i++){
+            state[i] = invSBox[state[i]];
+        }
+        return state;
     }
 
     public static void shiftBytes(int[] state){
