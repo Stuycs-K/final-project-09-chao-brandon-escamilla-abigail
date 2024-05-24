@@ -1,5 +1,0 @@
-(for future presentation)
-AES or Advanced Encryption Standard is a specification for the encryption of electronic data. 
-A variant of the Rjindael cipher, AES is a block cipher that uses a key size of a certain amount of bits to encrypt data. 
-Key sizes include: 128, 192, and 256 bits. AES encrypts data in blocks of 128 bits each. 
-There are different modes for AES with varying obfuscation effectiveness. The most popular ones are EBC and CBC. 

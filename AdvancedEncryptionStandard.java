@@ -43,6 +43,7 @@ public class AdvancedEncryptionStandard {
         0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
     };
 
+    //ENCRYPTION METHODS
     public static int[] addRoundKey(int[] state, int[] roundKey){
         for (int i = 0; i < 16; i++){
             state[i] ^= roundKey[i];
@@ -57,6 +58,20 @@ public class AdvancedEncryptionStandard {
         return state;
     }
 
+    public static int[] shiftRows(int[] state){
+        int[] shiftedState = new int[16];
+
+        for (int i = 0; i < 16; i++){
+            int row = i/4;
+            int column = i%4;
+
+            
+        }
+
+        return shiftedState;
+    }
+
+    //DECRYPTION METHODS
     public static int[] invSubBytes(int[] state){
         int[] invSBox = new int[256];
         for (int i = 0; i < 256; i++){
@@ -67,10 +82,6 @@ public class AdvancedEncryptionStandard {
             state[i] = invSBox[state[i]];
         }
         return state;
-    }
-
-    public static void shiftBytes(int[] state){
-
     }
 
 }
