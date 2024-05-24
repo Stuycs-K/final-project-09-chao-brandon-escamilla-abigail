@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class AdvancedEncryptionStandard {
     public static void main(String[] args){
         int[] exampleState = {0x32, 0x88, 0x31, 0xe0, 0x43, 0x5a, 0x31, 0x37, 0xf6, 0x30, 0x98, 0x07, 0xa8, 0x8d, 0xa2, 0x34};
@@ -14,10 +16,14 @@ public class AdvancedEncryptionStandard {
         subBytes(newState);
         System.out.println("State after SubBytes:");
 
-        for (int val : newState) {
+        for (int val : newState){
             System.out.print(String.format("%02x ", val));
         }
         System.out.println();
+
+        int[] readableState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        System.out.println("Readable state after shiftRows: ");
+        System.out.println(Arrays.toString(shiftRows(readableState)));
     }
 
     public static final int[] sBox = { // better as a one dimensional array
@@ -65,7 +71,7 @@ public class AdvancedEncryptionStandard {
             int row = i/4;
             int column = i%4;
 
-            
+            shiftedState[i] = state[i + (row - 4 * ((row+column)/4))];
         }
 
         return shiftedState;
