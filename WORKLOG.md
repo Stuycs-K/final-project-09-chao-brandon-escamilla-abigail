@@ -21,6 +21,10 @@ info
 
   Added to the research documented in notes.txt on AES, particularly the main functions and modes of AES.
 
+### 5/23/24
+
+  Added to the AES java implementation, starting with subBytes and addRoundKey.
+
 ### date y
 
 info
