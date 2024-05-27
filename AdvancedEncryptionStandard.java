@@ -49,6 +49,10 @@ public class AdvancedEncryptionStandard {
         0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
     };
 
+    public static final int[] mixMatrix = {
+        0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x03, 0x01, 0x01, 0x02
+    };
+
     //ENCRYPTION METHODS
     public static int[] addRoundKey(int[] state, int[] roundKey){
         for (int i = 0; i < 16; i++){
@@ -75,6 +79,18 @@ public class AdvancedEncryptionStandard {
         }
 
         return shiftedState;
+    }
+
+    public static int[] mixColumns(int[] state){
+        int[] mixedState = new int[16];
+
+        for (int i = 0; i < 4; i++){
+            for (int j = 0; j < 16; j+=4){
+                //multiply state by mixMatrix, store in mixedState
+            }
+        }
+
+        return mixedState;
     }
 
     //DECRYPTION METHODS
