@@ -50,7 +50,10 @@ public class AdvancedEncryptionStandard {
     };
 
     public static final int[] mixMatrix = {
-        0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x01, 0x01, 0x01, 0x02, 0x03, 0x03, 0x01, 0x01, 0x02
+        0x02, 0x03, 0x01, 0x01, 
+        0x01, 0x02, 0x03, 0x01, 
+        0x01, 0x01, 0x02, 0x03, 
+        0x03, 0x01, 0x01, 0x02
     };
 
     //ENCRYPTION METHODS
@@ -84,13 +87,22 @@ public class AdvancedEncryptionStandard {
     public static int[] mixColumns(int[] state){
         int[] mixedState = new int[16];
 
-        for (int i = 0; i < 4; i++){
-            for (int j = 0; j < 16; j+=4){
+        for (int col = 0; col < 4; col++){
+            for (int row = 0; row < 16; row+=4){
                 //multiply state by mixMatrix, store in mixedState
             }
         }
 
         return mixedState;
+    }
+
+    public static int[][] keyExpansion(int[] state, int[] initialKey){
+        int[][] keySchedule = new int[14][16]; // 14 keys for AES-256
+        return keySchedule;
+    }
+
+    public static int[] generateKey(){
+        
     }
 
     //DECRYPTION METHODS
