@@ -24,13 +24,13 @@ info
 ## Brandon Chao
 
 ### 5/22/24
-
   Added to the research documented in notes.txt on AES, particularly the main functions and modes of AES.
 
 ### 5/23/24
-
   Added to the AES java implementation, starting with subBytes and addRoundKey.
 
-### date y
+### 5/24/24
+  Researched KeyExpansion/AES Key Schedule and Mix Columns.
 
-info
+### date y
+  Started the implementation for KeyExpansion and initial key generation + researched initialization vectors for CBC
