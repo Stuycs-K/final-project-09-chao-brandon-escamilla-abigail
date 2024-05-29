@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 public class AdvancedEncryptionStandard {
     public static void main(String[] args){
@@ -24,6 +26,7 @@ public class AdvancedEncryptionStandard {
         int[] readableState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         System.out.println("Readable state after shiftRows: ");
         System.out.println(Arrays.toString(shiftRows(readableState)));
+        System.out.println("Random Key: " + Arrays.toString(generateKey()));
     }
 
     public static final int[] sBox = { // better as a one dimensional array
@@ -101,8 +104,12 @@ public class AdvancedEncryptionStandard {
         return keySchedule;
     }
 
-    public static int[] generateKey(){
-        
+    public static byte[] generateKey(){
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[32];
+        random.nextBytes(key);
+        System.out.println();
+        return key;
     }
 
     //DECRYPTION METHODS
