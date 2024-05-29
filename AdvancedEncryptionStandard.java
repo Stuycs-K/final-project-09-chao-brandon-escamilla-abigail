@@ -89,15 +89,48 @@ public class AdvancedEncryptionStandard {
 
     public static int[] mixColumns(int[] state){
         int[] mixedState = new int[16];
-
-        for (int col = 0; col < 4; col++){
-            for (int row = 0; row < 16; row+=4){
-                //multiply state by mixMatrix, store in mixedState
+        int[] column = new int[4]; //keeping track of columns
+        
+        //multiply state by mixMatrix, store in mixedState
+        for (int col = 0; col < 4; col++){ 
+            for (int row = 0; row < 4; row++){ 
+                // simplify getting column/row
+                column[row] = state[row * 4 + col];
             }
+            //for every column:
+            //col 1 = row1 x 2, row2 x 3, the rest multiply by 1 and stay the same, etc
+            mixedState[col] = mult(column[0], 2) ^ mult(column[1], 3) ^ column[2] ^ column[3];
+            mixedState[col + 4] = column[0] ^ mult(column[1], 2) ^ mult(column[2], 3) ^ column[3];
+            mixedState[col + 8] = column[0] ^ column[1] ^ mult(column[2], 2) ^ mult(column[3], 3);
+            mixedState[col + 12] = mult(column[0], 3) ^ column[1] ^ column[2] ^ mult(column[3], 2);
         }
 
         return mixedState;
     }
+    
+    public static int mult(int a, int b) {
+        int product = 0;
+        int hiBitSet;
+
+        for (int counter = 0; counter < 8; counter++) {
+           
+            if ((b & 1) != 0) {
+            
+                product ^= a;
+            }
+
+            hiBitSet = (a & 0x80);
+            a <<= 1; //pad with zeroes
+           
+            if (hiBitSet != 0) {
+                a ^= 0x1b; 
+            }
+
+            b >>= 1; 
+        }
+    return product;
+    }
+
 
     public static int[][] keyExpansion(int[] state, int[] initialKey){
         int[][] keySchedule = new int[14][16]; // 14 keys for AES-256
