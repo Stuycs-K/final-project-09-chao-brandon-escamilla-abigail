@@ -32,5 +32,5 @@ info
 ### 5/24/24
   Researched KeyExpansion/AES Key Schedule and Mix Columns.
 
-### date y
+### 5/28/24
   Started the implementation for KeyExpansion and initial key generation + researched initialization vectors for CBC
