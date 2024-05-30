@@ -26,6 +26,7 @@ public class AdvancedEncryptionStandard {
         int[] readableState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         System.out.println("Readable state after shiftRows: ");
         System.out.println(Arrays.toString(shiftRows(readableState)));
+
         System.out.println("Random Key: " + Arrays.toString(generateKey()));
     }
 
@@ -52,7 +53,7 @@ public class AdvancedEncryptionStandard {
         0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
     };
 
-    public static final int[] mixMatrix = {
+    public static final int[] mixMatrix = { // not used
         0x02, 0x03, 0x01, 0x01, 
         0x01, 0x02, 0x03, 0x01, 
         0x01, 0x01, 0x02, 0x03, 
@@ -91,7 +92,6 @@ public class AdvancedEncryptionStandard {
         int[] mixedState = new int[16];
         int[] column = new int[4]; //keeping track of columns
         
-        //multiply state by mixMatrix, store in mixedState
         for (int col = 0; col < 4; col++){ 
             for (int row = 0; row < 4; row++){ 
                 // simplify getting column/row
@@ -128,21 +128,48 @@ public class AdvancedEncryptionStandard {
 
             b >>= 1; 
         }
-    return product;
+        return product;
     }
 
 
     public static int[][] keyExpansion(int[] state, int[] initialKey){
-        int[][] keySchedule = new int[14][16]; // 14 keys for AES-256
+        int[][] keySchedule = new int[15][16]; // 15 keys for AES-256 (14 rounds)
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 16; j++){
+                keySchedule[i][j] = initialKey[i * 16 + j]; // ??
+            }
+        }
+        
         return keySchedule;
     }
 
-    public static byte[] generateKey(){
+    public static int[] generateKey(){
         SecureRandom random = new SecureRandom();
         byte[] key = new byte[32];
+        int[] intKey = new int[32];
         random.nextBytes(key);
-        System.out.println();
-        return key;
+        
+        for (int i = 0; i < 32; i++){
+            intKey[i] = (int) key[i];
+        }
+
+        return intKey;
+    }
+
+    public static int[] cipher(int[] input, int[][] keySchedule){ // assume aes256
+        int[] state = input;
+        addRoundKey(state, keySchedule[0]);
+
+        for (int i = 1; i < 14; i++){
+            state = subBytes(state);
+            state = shiftRows(state);
+            state = mixColumns(state);
+            state = addRoundKey(state, keySchedule[i]);
+        }
+        state = subBytes(state);
+        state = shiftRows(state);
+        state = addRoundKey(state, keySchedule[14]);
+        return state;
     }
 
     //DECRYPTION METHODS
