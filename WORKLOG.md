@@ -3,11 +3,9 @@
 ## Abigail Escamilla
 
 ### 5/22/24
-
   Doing research for AES presentation, added information to notes.txt.
 
 ### 5/23/24
-
   Researching the different modes for AES encryption (including ecb, cbc, cfb, and obc). 
 
 ### 5/24/24
@@ -16,9 +14,11 @@
 ### 5/28/24
   Researching how to implement mix columns function and writing pseudocode for the process. 
   
-### date y
+### 5/29/24
+  Implemented mixColumns and expanded on possible topics for presentation, such as the security of AES.
 
-info
+### date y
+  info
 
 
 ## Brandon Chao
