@@ -132,14 +132,12 @@ public class AdvancedEncryptionStandard {
     }
 
 
-    public static int[][] keyExpansion(int[] state, int[] initialKey){
-        int[][] keySchedule = new int[15][16]; // 15 keys for AES-256 (14 rounds)
-        for (int i = 0; i < 2; i++){
-            for (int j = 0; j < 16; j++){
-                keySchedule[i][j] = initialKey[i * 16 + j]; // ??
-            }
-        }
+    public static int[][] keyExpansion(int[] initialKey){
+
+        // the idea should be to use the NIST specification to create a word-based one dimensional array that utilizes ROTWORD and SUBWORD, 
+        // then convert it into a two dimensional array (group 4 words into one array stored in a two-dimensional key schedule)
         
+        int[][] keySchedule = new int[15][16]; // 15 keys for AES-256 (14 rounds)
         return keySchedule;
     }
 
@@ -156,11 +154,11 @@ public class AdvancedEncryptionStandard {
         return intKey;
     }
 
-    public static int[] cipher(int[] input, int[][] keySchedule){ // assume aes256
+    public static int[] cipher(int[] input, int numRounds, int[][] keySchedule){ // numRounds = 14 for AES-256
         int[] state = input;
         addRoundKey(state, keySchedule[0]);
 
-        for (int i = 1; i < 14; i++){
+        for (int i = 1; i < numRounds; i++){
             state = subBytes(state);
             state = shiftRows(state);
             state = mixColumns(state);
@@ -168,7 +166,7 @@ public class AdvancedEncryptionStandard {
         }
         state = subBytes(state);
         state = shiftRows(state);
-        state = addRoundKey(state, keySchedule[14]);
+        state = addRoundKey(state, keySchedule[numRounds]);
         return state;
     }
 
