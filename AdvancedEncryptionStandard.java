@@ -27,7 +27,11 @@ public class AdvancedEncryptionStandard {
         System.out.println("Readable state after shiftRows: ");
         System.out.println(Arrays.toString(shiftRows(readableState)));
 
-        System.out.println("Random Key: " + Arrays.toString(generateKey()));
+        int[] key = generateKey();
+        System.out.println("Random Key: " + Arrays.toString(key));
+
+        int[][] keySchedule = keyExpansion(key);
+        System.out.println("Key Schedule: " + Arrays.toString(keySchedule));
     }
 
     public static final int[] sBox = { // better as a one dimensional array
@@ -62,7 +66,7 @@ public class AdvancedEncryptionStandard {
 
     //ENCRYPTION METHODS
     public static int[] addRoundKey(int[] state, int[] roundKey){
-        for (int i = 0; i < 16; i++){
+        for (int i = 0; i < state.length; i++){
             state[i] ^= roundKey[i];
         }
         return state;
@@ -131,13 +135,42 @@ public class AdvancedEncryptionStandard {
         return product;
     }
 
+    public static int[] rotWord(int[] word){
+        return new int[0];
+    }
+
+    //subWord is the same as subBytes
 
     public static int[][] keyExpansion(int[] initialKey){
-
-        // the idea should be to use the NIST specification to create a word-based one dimensional array that utilizes ROTWORD and SUBWORD, 
+        int[] w = new int[60]; // one dimensional key schedule
+        int i = 0;
+        while (i < 8){
+            for (int j = 0; j < 4; j++){
+                w[i] = initialKey[4 * i + j];
+            }
+            i++;
+        }
+        while (i < 60){
+            int temp[] = new int[1];
+            temp[0] = w[i - 1];
+            if (i % 8 == 0){
+                temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments
+            }
+            else if (i % 8 == 4){
+                temp = subBytes(temp);
+            }
+            w[i] = addRoundKey(w[i-8], temp);
+            i++;
+        }
         // then convert it into a two dimensional array (group 4 words into one array stored in a two-dimensional key schedule)
         
         int[][] keySchedule = new int[15][16]; // 15 keys for AES-256 (14 rounds)
+
+        for (int j = 0; j < 15; j++){
+            for (int k = 0; k < 16; k++){
+                keySchedule[j][k] = w[j * 16 + k];
+            }
+        }
         return keySchedule;
     }
 
