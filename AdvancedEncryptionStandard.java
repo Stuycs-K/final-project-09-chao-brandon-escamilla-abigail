@@ -53,8 +53,17 @@ public class AdvancedEncryptionStandard {
         0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16,
     };
 
-    public static final int[] rCon = {
-        0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
+    public static final int[][] rCon = {
+        {0x01, 0x00, 0x00, 0x00}, 
+        {0x02, 0x00, 0x00, 0x00}, 
+        {0x04, 0x00, 0x00, 0x00}, 
+        {0x08, 0x00, 0x00, 0x00}, 
+        {0x10, 0x00, 0x00, 0x00}, 
+        {0x20, 0x00, 0x00, 0x00}, 
+        {0x40, 0x00, 0x00, 0x00}, 
+        {0x80, 0x00, 0x00, 0x00}, 
+        {0x1b, 0x00, 0x00, 0x00}, 
+        {0x36, 0x00, 0x00, 0x00}
     };
 
     public static final int[] mixMatrix = { // not used
@@ -136,25 +145,33 @@ public class AdvancedEncryptionStandard {
     }
 
     public static int[] rotWord(int[] word){
-        return new int[0];
+        int[] rotated = new int[4];
+        for (int i = 0; i < 3; i++){
+            rotated[i] = word[i + 1];
+        }
+        rotated[3] = word[0];
+        return rotated;
     }
 
     //subWord is the same as subBytes
 
     public static int[][] keyExpansion(int[] initialKey){
-        int[] w = new int[60]; // one dimensional key schedule
+        int[][] w = new int[60][4]; // word key schedule
         int i = 0;
         while (i < 8){
+            int[] temp = new int[4];
             for (int j = 0; j < 4; j++){
-                w[i] = initialKey[4 * i + j];
+                temp[j] = initialKey[4 * i + j];
             }
+            w[i] = temp;
             i++;
         }
         while (i < 60){
-            int temp[] = new int[1];
-            temp[0] = w[i - 1];
+            int temp[] = new int[4];
+            temp = w[i - 1];
             if (i % 8 == 0){
-                temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments
+                temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments 
+                //***!!! CURRENTLY, INITIAL KEY DOESNT HAVE SUBSTITUTIONS IN SBOX !!!***
             }
             else if (i % 8 == 4){
                 temp = subBytes(temp);
@@ -162,13 +179,13 @@ public class AdvancedEncryptionStandard {
             w[i] = addRoundKey(w[i-8], temp);
             i++;
         }
-        // then convert it into a two dimensional array (group 4 words into one array stored in a two-dimensional key schedule)
+        // then convert word key schedule into a key schedule grouped by keys (group 4 words into one array stored in a two-dimensional key schedule)
         
         int[][] keySchedule = new int[15][16]; // 15 keys for AES-256 (14 rounds)
 
-        for (int j = 0; j < 15; j++){
-            for (int k = 0; k < 16; k++){
-                keySchedule[j][k] = w[j * 16 + k];
+        for (int j = 0; j < 60; j++){
+            for (int k = 0; k < 4; k++){
+                keySchedule[j / 4][j * 4 + k] = w[j][k];
             }
         }
         return keySchedule;
