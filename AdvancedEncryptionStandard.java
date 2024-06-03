@@ -1,9 +1,14 @@
 import java.util.Arrays;
-import java.security.SecureRandom;
+import java.io.UnsupportedEncodingException;
+import java.security.*;
 import java.util.Base64;
 
-public class AdvancedEncryptionStandard {
-    public static void main(String[] args){
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+public class AdvancedEncryptionStandard{
+    public static void main(String[] args) throws NoSuchAlgorithmException{
         int[] exampleState = {0x32, 0x88, 0x31, 0xe0, 0x43, 0x5a, 0x31, 0x37, 0xf6, 0x30, 0x98, 0x07, 0xa8, 0x8d, 0xa2, 0x34};
         int[] exampleRoundKey = {0x2b, 0x28, 0xab, 0x09, 0x7e, 0xae, 0xf7, 0xcf, 0x15, 0xd2, 0x15, 0x4f, 0x16, 0xa6, 0x88, 0x3c};
 
@@ -31,7 +36,10 @@ public class AdvancedEncryptionStandard {
         System.out.println("Random Key: " + Arrays.toString(key));
 
         int[][] keySchedule = keyExpansion(key);
-        System.out.println("Key Schedule: " + Arrays.toString(keySchedule));
+        System.out.println("Key Schedule: ");
+        for (int i = 0; i < keySchedule.length; i++){
+            System.out.println(Arrays.toString(keySchedule[i]));
+        }
     }
 
     public static final int[] sBox = { // better as a one dimensional array
@@ -170,8 +178,7 @@ public class AdvancedEncryptionStandard {
             int temp[] = new int[4];
             temp = w[i - 1];
             if (i % 8 == 0){
-                temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments 
-                //***!!! CURRENTLY, INITIAL KEY DOESNT HAVE SUBSTITUTIONS IN SBOX !!!***
+                temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments
             }
             else if (i % 8 == 4){
                 temp = subBytes(temp);
@@ -185,23 +192,22 @@ public class AdvancedEncryptionStandard {
 
         for (int j = 0; j < 60; j++){
             for (int k = 0; k < 4; k++){
-                keySchedule[j / 4][j * 4 + k] = w[j][k];
+                keySchedule[j / 4][(j * 4 + k) % 16] = w[j][k];
             }
         }
         return keySchedule;
     }
 
-    public static int[] generateKey(){
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[32];
-        int[] intKey = new int[32];
-        random.nextBytes(key);
-        
-        for (int i = 0; i < 32; i++){
-            intKey[i] = (int) key[i];
+    public static int[] generateKey() throws NoSuchAlgorithmException{
+        KeyGenerator gen = KeyGenerator.getInstance("AES");
+        gen.init(256);
+        SecretKey secret = gen.generateKey();
+        byte[] binary = secret.getEncoded();
+        int[] initialKey = new int[binary.length];
+        for (int i = 0; i < binary.length; i++){
+            initialKey[i] = ((int) binary[i]) + 128;
         }
-
-        return intKey;
+        return initialKey;
     }
 
     public static int[] cipher(int[] input, int numRounds, int[][] keySchedule){ // numRounds = 14 for AES-256
