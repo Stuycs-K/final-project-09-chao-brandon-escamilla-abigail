@@ -40,6 +40,20 @@ public class AdvancedEncryptionStandard{
         for (int i = 0; i < keySchedule.length; i++){
             System.out.println(Arrays.toString(keySchedule[i]));
         }
+
+        String plaintxt = "Hello World !!!!";
+        int[] testState = new int[16];
+        for (int i = 0; i < 16; i++){
+            testState[i] = (int) plaintxt.charAt(i);
+        }
+        int[] encrypted = cipher(testState, 14, keySchedule);
+
+        String ciphertxt = "";
+        for (int i = 0; i < 16; i++){
+            ciphertxt += (char) encrypted[i];
+        }
+
+        System.out.println("Cipher text: " + ciphertxt);
     }
 
     public static final int[] sBox = { // better as a one dimensional array
@@ -129,13 +143,13 @@ public class AdvancedEncryptionStandard{
         return mixedState;
     }
     
-    public static int mult(int a, int b) {
+    public static int mult(int a, int b){
         int product = 0;
         int hiBitSet;
 
-        for (int counter = 0; counter < 8; counter++) {
+        for (int counter = 0; counter < 8; counter++){
            
-            if ((b & 1) != 0) {
+            if ((b & 1) != 0){
             
                 product ^= a;
             }
@@ -143,7 +157,7 @@ public class AdvancedEncryptionStandard{
             hiBitSet = (a & 0x80);
             a <<= 1; //pad with zeroes
            
-            if (hiBitSet != 0) {
+            if (hiBitSet != 0){
                 a ^= 0x1b; 
             }
 
@@ -160,8 +174,6 @@ public class AdvancedEncryptionStandard{
         rotated[3] = word[0];
         return rotated;
     }
-
-    //subWord is the same as subBytes
 
     public static int[][] keyExpansion(int[] initialKey){
         int[][] w = new int[60][4]; // word key schedule
@@ -219,6 +231,7 @@ public class AdvancedEncryptionStandard{
             state = shiftRows(state);
             state = mixColumns(state);
             state = addRoundKey(state, keySchedule[i]);
+            System.out.println("Round " + i + " of cipher result: " + Arrays.toString(state));
         }
         state = subBytes(state);
         state = shiftRows(state);
