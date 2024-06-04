@@ -17,6 +17,12 @@
 ### 5/29/24
   Implemented mixColumns and expanded on possible topics for presentation, such as the security of AES.
 
+### 5/30/24
+  Absent. Worked on presentation and gathering sources.
+
+### 6/03/24
+  Researched and organized topics for presentation. Discussed with other AES groups what topics we are each focusing on. 
+
 ### date y
   info
 
