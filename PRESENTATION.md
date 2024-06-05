@@ -21,10 +21,10 @@ Since AES is a block cipher, the first step in encrypting data is dividing the p
 
 For example, if you had a phrase like “AES is a very secure method of encryption”, then the first block would look like this:
 
-A |	2 | i |	e
---- |--- | --- | ---
-E	| 5 |	s |	r
-S	|	6 |  | y 
-- |  	| v	| 
+| a | i | e  | s
+| ------------- |:-------------:| -----:|
+| e | s | r | e
+| s |   | y | c
+|   | v |   | u
 
 The rest of the plaintext is then continued in the other blocks. When a block has no plaintext left to put in it, it puts in padding bytes, because AES needs complete blocks to be able to function.
