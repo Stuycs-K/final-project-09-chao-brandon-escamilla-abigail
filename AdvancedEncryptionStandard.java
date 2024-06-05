@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AdvancedEncryptionStandard{
     public static void main(String[] args) throws NoSuchAlgorithmException{
+        /*
         int[] exampleState = {0x32, 0x88, 0x31, 0xe0, 0x43, 0x5a, 0x31, 0x37, 0xf6, 0x30, 0x98, 0x07, 0xa8, 0x8d, 0xa2, 0x34};
         int[] exampleRoundKey = {0x2b, 0x28, 0xab, 0x09, 0x7e, 0xae, 0xf7, 0xcf, 0x15, 0xd2, 0x15, 0x4f, 0x16, 0xa6, 0x88, 0x3c};
 
@@ -31,12 +32,21 @@ public class AdvancedEncryptionStandard{
         int[] readableState = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         System.out.println("Readable state after shiftRows: ");
         System.out.println(Arrays.toString(shiftRows(readableState)));
+        */
 
         int[] key = generateKey();
         System.out.println("Random Key: " + Arrays.toString(key));
 
+        //TEMPORARY:::
+        key = new int[32];
+        for (int i = 0; i < 32; i++){
+            key[i] = i+1;
+        }
+
+        System.out.println("Temp easy key: " + Arrays.toString(key));
+
         int[][] keySchedule = keyExpansion(key);
-        System.out.println("Key Schedule: ");
+        System.out.println("keySchedule: ");
         for (int i = 0; i < keySchedule.length; i++){
             System.out.println(Arrays.toString(keySchedule[i]));
         }
@@ -86,13 +96,6 @@ public class AdvancedEncryptionStandard{
         {0x80, 0x00, 0x00, 0x00}, 
         {0x1b, 0x00, 0x00, 0x00}, 
         {0x36, 0x00, 0x00, 0x00}
-    };
-
-    public static final int[] mixMatrix = { // not used
-        0x02, 0x03, 0x01, 0x01, 
-        0x01, 0x02, 0x03, 0x01, 
-        0x01, 0x01, 0x02, 0x03, 
-        0x03, 0x01, 0x01, 0x02
     };
 
     //ENCRYPTION METHODS
@@ -190,12 +193,22 @@ public class AdvancedEncryptionStandard{
             int temp[] = new int[4];
             temp = w[i - 1];
             if (i % 8 == 0){
+                System.out.println("MOD 8");
+                System.out.println("temp: " + Arrays.toString(temp));
+                System.out.println("rotWord: " + Arrays.toString(rotWord(temp)));
+                System.out.println("subBytes: " + Arrays.toString(subBytes(rotWord(temp))));
                 temp = addRoundKey(subBytes(rotWord(temp)), rCon[i / 8]); // addRoundKey is just bitwise XOR of int arr arguments
+                System.out.println("Bitwise XOR / addRoundKey: " + Arrays.toString(temp));
             }
             else if (i % 8 == 4){
+                System.out.println("MOD 8 = 4");
+                System.out.println("temp: " + Arrays.toString(temp));
                 temp = subBytes(temp);
+                System.out.println("subBytes: " + Arrays.toString(temp));
             }
+            System.out.print("FINAL BITWISE " + i + " : ");
             w[i] = addRoundKey(w[i-8], temp);
+            System.out.println(Arrays.toString(w[i]));
             i++;
         }
         // then convert word key schedule into a key schedule grouped by keys (group 4 words into one array stored in a two-dimensional key schedule)
