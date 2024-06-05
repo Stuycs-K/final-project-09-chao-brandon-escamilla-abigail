@@ -23,9 +23,11 @@
 ### 6/03/24
   Researched and organized topics for presentation. Discussed with other AES groups what topics we are each focusing on. 
 
-### date y
-  info
+### 6/05/24
+  Moved presentation info into the markdown file and edited it for markdown format. Began more research on attack on AES.
 
+### 6/07/24
+  info
 
 ## Brandon Chao
 
