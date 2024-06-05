@@ -1,6 +1,6 @@
 # This document is required.
 
-#AES Presentation Slides
+# AES Presentation Slides
 
 ## What is AES?
 AES or Advanced Encryption Standard is a specification for the encryption of electronic data. AES uses symmetric encryption, meaning it requires the same key to encrypt and decrypt data.
@@ -14,6 +14,7 @@ If the key length for AES gets bigger, there is, of course, more security. Becau
 However, no matter the key size, each version of AES is incredibly secure, and both versions are still considered safe to use for encrypting sensitive information.
 
 Additionally, there is the power it takes to encrypt using each version of AES. AES-128 is typically used because it's much quicker and takes less computational power than AES-256 but still maintains security.  
+
 The main difference that comes from key sizes is that the number of rounds for each operation also differs between each, with 10, 12, and 14 rounds respectively.
 
 ## Blocks in AES
