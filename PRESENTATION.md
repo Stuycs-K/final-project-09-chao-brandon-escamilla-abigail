@@ -27,4 +27,9 @@ For example, if you had a phrase like “AES is a very secure method of encrypti
 | s |   | y | c
 |   | v |   | u
 
+| a | i | e | s |
+| e | s | r | e |
+| s | \ | y | c |
+| \ | v | \ | u |
+
 The rest of the plaintext is then continued in the other blocks. When a block has no plaintext left to put in it, it puts in padding bytes, because AES needs complete blocks to be able to function.
