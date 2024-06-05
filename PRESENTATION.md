@@ -21,13 +21,8 @@ Since AES is a block cipher, the first step in encrypting data is dividing the p
 
 For example, if you had a phrase like “AES is a very secure method of encryption”, then the first block would look like this:
 
-| a | i | e  | s
-| ------------- |:-------------:| -----:|
-| e | s | r | e
-| s |   | y | c
-|   | v |   | u
-
 | a | i | e | s |
+| --- | --- | --- |
 | e | s | r | e |
 | s | \ | y | c |
 | \ | v | \ | u |
