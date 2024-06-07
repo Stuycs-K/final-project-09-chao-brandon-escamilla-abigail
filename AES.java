@@ -43,9 +43,16 @@ public class AES{ // AES-256, CBC, PKCS7
         String plaintext = "Hello World !!!!";
 
         byte[] encrypted = encrypt(plaintext, key, iv);
-        System.out.println("Key: " + Base64.getEncoder().encodeToString(key)); // alternatively, use bytesToHex to see byte arr as hex
-        System.out.println("IV: " + Base64.getEncoder().encodeToString(iv));
-        System.out.println("Encrypted: " + Base64.getEncoder().encodeToString(encrypted));
+        System.out.println("Random Key: " + Arrays.toString(key)); // alternatively, use bytesToHex to see byte arr as hex
+        System.out.println("Random IV: " + Arrays.toString(iv));
+        System.out.println("Random Encrypted: " + Arrays.toString(encrypted));
+
+        String knownKey = "qwertyuiopasdfghjklzxcvbnmqwerty"; //32 char
+        String knownIV = "encryptionAESvec"; //16 char
+        byte[] encrypted2 = encrypt(plaintext, knownKey.getBytes(), knownIV.getBytes());
+        System.out.println("Known Key: " + knownKey);
+        System.out.println("Known IV: " + knownIV);
+        System.out.println("Known Encrypted: " + Base64.getEncoder().encodeToString(encrypted2));
     }
 
     private static String bytesToHex(byte[] bytes){
@@ -62,6 +69,9 @@ public class AES{ // AES-256, CBC, PKCS7
 
     private static byte[] pad(byte[] plaintextBytes){ // PKCS7 padding
         int paddingNeeded = 16 - (plaintextBytes.length % 16);
+        if (paddingNeeded % 16 == 0){
+            return plaintextBytes;
+        }
         byte[] padded = new byte[plaintextBytes.length + paddingNeeded];
         System.arraycopy(plaintextBytes, 0, padded, 0, plaintextBytes.length);
         for (int i = plaintextBytes.length; i < padded.length; i++){
