@@ -1,11 +1,9 @@
 import java.util.Arrays;
-import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.Base64;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 public class AdvancedEncryptionStandard{
     public static void main(String[] args) throws NoSuchAlgorithmException{

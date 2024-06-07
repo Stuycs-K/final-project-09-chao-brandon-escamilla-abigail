@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.security.SecureRandom;
 
 public class AES{
     private static final int[] sBox = {
@@ -37,16 +38,23 @@ public class AES{
 
     public static void main(String[] args) throws Exception{
         byte[] key = generateKey();
-        System.out.println("Generated Key: " + Arrays.toString(key));
+        byte[] iv = generateIV();
+        String plaintext = "Hello World !!!!";
 
-        byte[] keySchedule = keyExpansion(key);
-        System.out.println("Key Schedule: " + Arrays.toString(keySchedule));
+        byte[] encrypted = encrypt(plaintext, key, iv);
+        System.out.println("Encrypted: " + bytesToHex(encrypted));
+    }
 
-        String plaintxt = "Hello World !!!!";
-        byte[] input = plaintxt.getBytes();
-        byte[] encrypted = cipher(input, keySchedule);
-
-        System.out.println("Encrypted: " + new String(encrypted));
+    private static String bytesToHex(byte[] bytes){
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes){
+            String hex = Integer.toHexString(0xFF & b);
+            if (hex.length() == 1){
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
     public static byte[] keyExpansion(byte[] key){
@@ -94,9 +102,16 @@ public class AES{
         return input;
     }
 
-    public static byte[] cipher(byte[] input, byte[] keySchedule){
+    public static byte[] encrypt(String plaintext, byte[] key, byte[] iv) throws Exception{
+        // returns cipher after padding
+    }
+
+    public static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
+        //for IV
+    }
+
+    public static byte[] encryptBlock(byte[] input, byte[] keySchedule, byte[] iv){ // old cipher/NIST cipher
         byte[] state = Arrays.copyOf(input, input.length);
-        addRoundKey(state, Arrays.copyOfRange(keySchedule, 0, 16));
 
         for (int round = 1; round < 14; round++){
             subBytes(state);
@@ -137,7 +152,6 @@ public class AES{
     }
 
     public static void mixColumns(byte[] state){
-        // dont actually have to return anything
         byte[] mixedState = new byte[16];
         
         for (int i = 0; i < 4; i++){
@@ -178,5 +192,12 @@ public class AES{
         keyGen.init(256); // for AES-256
         SecretKey secretKey = keyGen.generateKey();
         return secretKey.getEncoded();
+    }
+
+    public static byte[] generateIV() throws Exception{ // just random
+        byte[] ivBytes = new byte[16];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(ivBytes);
+        return ivBytes;
     }
 }
