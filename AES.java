@@ -57,6 +57,42 @@ public class AES{
         return hexString.toString();
     }
 
+    private static byte[] pad(byte[] plaintextBytes){ // PKCS#7 padding
+        int paddingNeeded = 16 - (plaintextBytes.length % 16);
+        byte[] padded = new byte[plaintextBytes.length + paddingNeeded];
+        System.arraycopy(plaintextBytes, 0, padded, 0, plaintextBytes.length);
+        for (int i = plaintextBytes.length; i < padded.length; i++){
+            padded[i] = (byte) paddingNeeded;
+        }
+        return padded;
+    }
+
+    public static byte[] encrypt(String plaintext, byte[] key, byte[] iv) throws Exception{
+        // returns cipher after padding
+    }
+
+    public static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
+        //for IV
+    }
+
+    public static byte[] encryptBlock(byte[] input, byte[] keySchedule, byte[] iv){ // old cipher/NIST cipher
+        byte[] state = Arrays.copyOf(input, input.length);
+
+        for (int round = 1; round < 14; round++){
+            subBytes(state);
+            shiftRows(state);
+            mixColumns(state);
+            addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * round, 16 * (round + 1)));
+        }
+
+        subBytes(state);
+        shiftRows(state);
+        addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * 14, 16 * 15));
+
+        return state;
+    }
+
+
     public static byte[] keyExpansion(byte[] key){
         int Nb = 4; // block size in words
         int Nk = key.length / 4; // key size in words
@@ -100,31 +136,6 @@ public class AES{
             input[i] = (byte) sBox[input[i] & 0xFF];
         }
         return input;
-    }
-
-    public static byte[] encrypt(String plaintext, byte[] key, byte[] iv) throws Exception{
-        // returns cipher after padding
-    }
-
-    public static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
-        //for IV
-    }
-
-    public static byte[] encryptBlock(byte[] input, byte[] keySchedule, byte[] iv){ // old cipher/NIST cipher
-        byte[] state = Arrays.copyOf(input, input.length);
-
-        for (int round = 1; round < 14; round++){
-            subBytes(state);
-            shiftRows(state);
-            mixColumns(state);
-            addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * round, 16 * (round + 1)));
-        }
-
-        subBytes(state);
-        shiftRows(state);
-        addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * 14, 16 * 15));
-
-        return state;
     }
 
     public static void addRoundKey(byte[] state, byte[] roundKey){
