@@ -1,11 +1,11 @@
 usage:
 	echo "read directions"
 
-run: AdvancedEncryptionStandard.class
-	@java AdvancedEncryptionStandard.java $(ARGS)
+run: AES.class
+	@java AES.java $(ARGS)
 
-AdvancedEncryptionStandard.class: AdvancedEncryptionStandard.java
-	@javac AdvancedEncryptionStandard.java
+AES.class: AES.java
+	@javac AES.java
 
 AES: run
 
