@@ -1,9 +1,10 @@
 import java.util.Arrays;
+import java.util.Base64;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 
-public class AES{
+public class AES{ // AES-256, CBC, PKCS7
     private static final int[] sBox = {
         (byte) 0x63, (byte) 0x7c, (byte) 0x77, (byte) 0x7b, (byte) 0xf2, (byte) 0x6b, (byte) 0x6f, (byte) 0xc5, (byte) 0x30, (byte) 0x01, (byte) 0x67, (byte) 0x2b, (byte) 0xfe, (byte) 0xd7, (byte) 0xab, (byte) 0x76,
         (byte) 0xca, (byte) 0x82, (byte) 0xc9, (byte) 0x7d, (byte) 0xfa, (byte) 0x59, (byte) 0x47, (byte) 0xf0, (byte) 0xad, (byte) 0xd4, (byte) 0xa2, (byte) 0xaf, (byte) 0x9c, (byte) 0xa4, (byte) 0x72, (byte) 0xc0,
@@ -42,7 +43,9 @@ public class AES{
         String plaintext = "Hello World !!!!";
 
         byte[] encrypted = encrypt(plaintext, key, iv);
-        System.out.println("Encrypted: " + bytesToHex(encrypted));
+        System.out.println("Key: " + Base64.getEncoder().encodeToString(key)); // alternatively, use bytesToHex to see byte arr as hex
+        System.out.println("IV: " + Base64.getEncoder().encodeToString(iv));
+        System.out.println("Encrypted: " + Base64.getEncoder().encodeToString(encrypted));
     }
 
     private static String bytesToHex(byte[] bytes){
@@ -57,7 +60,7 @@ public class AES{
         return hexString.toString();
     }
 
-    private static byte[] pad(byte[] plaintextBytes){ // PKCS#7 padding
+    private static byte[] pad(byte[] plaintextBytes){ // PKCS7 padding
         int paddingNeeded = 16 - (plaintextBytes.length % 16);
         byte[] padded = new byte[plaintextBytes.length + paddingNeeded];
         System.arraycopy(plaintextBytes, 0, padded, 0, plaintextBytes.length);
@@ -68,14 +71,32 @@ public class AES{
     }
 
     public static byte[] encrypt(String plaintext, byte[] key, byte[] iv) throws Exception{
-        // returns cipher after padding
+        byte[] plaintextBytes = plaintext.getBytes();
+        plaintextBytes = pad(plaintextBytes);
+        byte[] keySchedule = keyExpansion(key);
+        return cipher(plaintextBytes, keySchedule, iv);
     }
 
     public static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
-        //for IV
+        byte[] output = new byte[input.length];
+        byte[] previousBlock = Arrays.copyOf(iv, iv.length); // Start with the IV
+
+        for (int i = 0; i < input.length; i += 16){
+            byte[] block = Arrays.copyOfRange(input, i, i + 16);
+
+            for (int j = 0; j < 16; j++){
+                block[j] ^= previousBlock[j];
+            }
+
+            block = encryptBlock(block, keySchedule);
+            System.arraycopy(block, 0, output, i, 16);
+            previousBlock = block;
+        }
+
+        return output;
     }
 
-    public static byte[] encryptBlock(byte[] input, byte[] keySchedule, byte[] iv){ // old cipher/NIST cipher
+    public static byte[] encryptBlock(byte[] input, byte[] keySchedule){ // old cipher/NIST cipher
         byte[] state = Arrays.copyOf(input, input.length);
 
         for (int round = 1; round < 14; round++){
