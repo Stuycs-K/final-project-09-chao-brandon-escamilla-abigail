@@ -94,5 +94,89 @@ public class AES{
         return input;
     }
 
+    public static byte[] cipher(byte[] input, byte[] keySchedule){
+        byte[] state = Arrays.copyOf(input, input.length);
+        addRoundKey(state, Arrays.copyOfRange(keySchedule, 0, 16));
 
+        for (int round = 1; round < 14; round++){
+            subBytes(state);
+            shiftRows(state);
+            mixColumns(state);
+            addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * round, 16 * (round + 1)));
+        }
+
+        subBytes(state);
+        shiftRows(state);
+        addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * 14, 16 * 15));
+
+        return state;
+    }
+
+    public static void addRoundKey(byte[] state, byte[] roundKey){
+        for (int i = 0; i < state.length; i++){
+            state[i] ^= roundKey[i];
+        }
+    }
+
+    public static void subBytes(byte[] state){
+        for (int i = 0; i < state.length; i++){
+            state[i] = (byte) sBox[state[i] & 0xFF];
+        }
+    }
+
+    public static void shiftRows(byte[] state){
+        byte[] shiftedState = new byte[16];
+
+        for (int i = 0; i < 16; i++){
+            int row = i / 4;
+            int column = i % 4;
+            shiftedState[i] = (byte) state[i + (row - 4 * ((row+column)/4))];
+        }
+
+        System.arraycopy(shiftedState, 0, state, 0, state.length);
+    }
+
+    public static void mixColumns(byte[] state){
+        // dont actually have to return anything
+        byte[] mixedState = new byte[16];
+        
+        for (int i = 0; i < 4; i++){
+            int columnBase = i * 4;
+            byte s0 = state[columnBase];
+            byte s1 = state[columnBase + 1];
+            byte s2 = state[columnBase + 2];
+            byte s3 = state[columnBase + 3];
+            
+            mixedState[columnBase] = (byte) (gmul(s0, (byte) 0x02) ^ gmul(s1, (byte) 0x03) ^ s2 ^ s3);
+            mixedState[columnBase + 1] = (byte) (s0 ^ gmul(s1, (byte) 0x02) ^ gmul(s2, (byte) 0x03) ^ s3);
+            mixedState[columnBase + 2] = (byte) (s0 ^ s1 ^ gmul(s2, (byte) 0x02) ^ gmul(s3, (byte) 0x03));
+            mixedState[columnBase + 3] = (byte) (gmul(s0, (byte) 0x03) ^ s1 ^ s2 ^ gmul(s3, (byte) 0x02));
+        }
+        
+        System.arraycopy(mixedState, 0, state, 0, state.length);
+    }
+    
+    private static byte gmul(byte a, byte b){
+        byte product = 0;
+        byte hiBitSet;
+        for (int i = 0; i < 8; i++){
+            if ((b & 1) != 0){
+                product ^= a;
+            }
+            hiBitSet = (byte) (a & 0x80);
+            a <<= 1;
+            if (hiBitSet != 0){
+                a ^= 0x1b;
+            }
+            b >>= 1;
+        }
+        return product;
+    }
+    
+    public static byte[] generateKey() throws Exception{
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(256); // for AES-256
+        SecretKey secretKey = keyGen.generateKey();
+        return secretKey.getEncoded();
+    }
 }
