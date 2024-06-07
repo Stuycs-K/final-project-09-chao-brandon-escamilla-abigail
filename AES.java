@@ -22,7 +22,7 @@ public class AES{
         (byte) 0x8c, (byte) 0xa1, (byte) 0x89, (byte) 0x0d, (byte) 0xbf, (byte) 0xe6, (byte) 0x42, (byte) 0x68, (byte) 0x41, (byte) 0x99, (byte) 0x2d, (byte) 0x0f, (byte) 0xb0, (byte) 0x54, (byte) 0xbb, (byte) 0x16,
     };
 
-    public static final int[][] rCon = {
+    private static final int[][] rCon = {
         {(byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00}, 
         {(byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00}, 
         {(byte) 0x04, (byte) 0x00, (byte) 0x00, (byte) 0x00}, 
@@ -34,4 +34,65 @@ public class AES{
         {(byte) 0x1b, (byte) 0x00, (byte) 0x00, (byte) 0x00}, 
         {(byte) 0x36, (byte) 0x00, (byte) 0x00, (byte) 0x00}
     };
+
+    public static void main(String[] args) throws Exception{
+        byte[] key = generateKey();
+        System.out.println("Generated Key: " + Arrays.toString(key));
+
+        byte[] keySchedule = keyExpansion(key);
+        System.out.println("Key Schedule: " + Arrays.toString(keySchedule));
+
+        String plaintxt = "Hello World !!!!";
+        byte[] input = plaintxt.getBytes();
+        byte[] encrypted = cipher(input, keySchedule);
+
+        System.out.println("Encrypted: " + new String(encrypted));
+    }
+
+    public static byte[] keyExpansion(byte[] key){
+        int Nb = 4; // block size in words
+        int Nk = key.length / 4; // key size in words
+        int Nr = Nk + 6; // number of rounds
+        byte[] expandedKey = new byte[Nb * (Nr + 1) * 4];
+
+        int currentSize = 0;
+        int rconIter = 1;
+        byte[] temp = new byte[4];
+
+        System.arraycopy(key, 0, expandedKey, 0, key.length);
+        currentSize += key.length;
+
+        while (currentSize < expandedKey.length){
+            System.arraycopy(expandedKey, currentSize - 4, temp, 0, 4);
+
+            if (currentSize % key.length == 0){
+                temp = rotateWord(temp);
+                temp = subWord(temp);
+                temp[0] ^= rCon[rconIter++][0];
+            }
+
+            for (int i = 0; i < temp.length; i++){
+                expandedKey[currentSize] = (byte) (expandedKey[currentSize - key.length] ^ temp[i]);
+                currentSize++;
+            }
+        }
+
+        return expandedKey;
+    }
+
+    private static byte[] rotateWord(byte[] input){
+        byte temp = input[0];
+        System.arraycopy(input, 1, input, 0, input.length - 1);
+        input[input.length - 1] = temp;
+        return input;
+    }
+
+    private static byte[] subWord(byte[] input){
+        for (int i = 0; i < input.length; i++){
+            input[i] = (byte) sBox[input[i] & 0xFF];
+        }
+        return input;
+    }
+
+
 }
