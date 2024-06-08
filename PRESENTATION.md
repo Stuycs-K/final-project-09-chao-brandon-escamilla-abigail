@@ -20,7 +20,7 @@ The main difference that comes from key sizes is that the number of rounds for e
 ## Blocks in AES
 Since AES is a block cipher, the first step in encrypting data is dividing the plaintext into data blocks of four bytes by four bytes, for a total of 128 bits. 
 
-For example, if you had a phrase like 'AES is a very secure method of encryption', then the first block would look like this:
+For example, if you wanted to encrypt a phrase like 'AES is a very secure method of encryption', then the first block would look like this:
 
 A |	i | v |	s
 --- |--- | --- | ---
@@ -29,6 +29,10 @@ S	|	\	 | r | c
 \ 	| a	| y	| u
 
 The rest of the plaintext is then continued in the other blocks. When a block has no plaintext left to put in it, it puts in padding bytes, because AES needs complete blocks to be able to function.
+
+### Initialization
+In AES, these plaintext blocks are initialized when they are copied into data structures known as `state arrays`. A state array simply refers to the data structure that is used to hold the results after each encryption/decryption process, and is the same as representing the 4x4 matrix of bytes. 
+It is the state array that undergoes each transformation after every round. 
 
 ## What are keys and rounds in AES?
 Depending on the key, each variant of AES has a different number of rounds. The 'key' in AES is made of 32-bit (or 4 bytes) 'words', so the cipher key in AES-256, for example, would be 8 'words' long. 
@@ -80,19 +84,29 @@ AES consists of several rounds that use four main functions to encrypt blocks of
   * AddRoundKey
 
 ### SubBytes
+The SubBytes operation uses substitution to change each byte of the block with another block according to a specific fixed table. This table is known as the substitution box, or `S-box`. Each byte is substituted independently from the others within each block. 
+The `S-box` is a 16 x 16 Matrix (insert image here). This substitution method is meant to make it harder to find patterns in encrypted data.
 
 ### ShiftRows
+In this transformation, bytes in each row of the block are repeatedly shifted to the left. The first row remains the same, while the second row shifts over one, the third shifts over two, and the last row shifts over three. (insert image here)
 
 ### MixColumns
+MixColumns uses Matrix multiplication and multiplies a constant matrix with each column in the state array to get a new one for the resultant state array. This step is omitted in the last round, for several reasons. The purpose of mixColumns is to increase the complexity of the transformation, therefore spreading greater encryption across the entire block. However, this is not needed by the last round as the encryption process is nearing its end. Leaving out mixColumns for the last round does not affect security and only makes the end of the process more efficient. 
 
 ### Add Round Key
-
+The block data in the state array is xored against the given key generated and passes on that state array as input to the next step.
 
 ## To be added...
 Inverse AES Functions (decryption)
+
 Security of AES
+
 Why is it so good/secure?
+
 Recent cyber attacks
+
 AES cryptanalysis(?)
+
 How are keys securely distributed? (DH key exchange)
+
 Possible future developments of aes(?)
