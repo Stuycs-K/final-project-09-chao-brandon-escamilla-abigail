@@ -4,6 +4,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.SecureRandom;
 import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 public class AES{ // AES-256, CBC, PKCS7
     private static final byte[] sBox = {
@@ -38,6 +39,13 @@ public class AES{ // AES-256, CBC, PKCS7
         {(byte) 0x36, (byte) 0x00, (byte) 0x00, (byte) 0x00}
     };
 
+    private static final byte[] invSBox = new byte[256]; // use sBox to init invSBox
+    static{
+        for (int i = 0; i < 256; i++){
+            invSBox[sBox[i] & 0xFF] = (byte) i;
+        }
+    }
+
     public static void main(String[] args) throws Exception{
 
         /*
@@ -68,89 +76,178 @@ public class AES{ // AES-256, CBC, PKCS7
         byte[] key = new byte[32];
         byte[] iv = new byte[16];
         String plaintext = "";
+        String ciphertext = "";
 
-        boolean gotKey = false;
-        while (gotKey == false){
-            System.out.println("Enter a 32-character key or type 'generate' to create a random key: ");
-            String input = scanner.nextLine().trim(); // avoid trailing/leading spaces
-            if ("generate".equalsIgnoreCase(input)){
-                key = generateKey();
-                gotKey = true;
-            } 
-            else if (input.length() == 32){
-                key = input.getBytes();
-                gotKey = true;
-            }
-            else {
-                System.out.println("Invalid key length. Please enter exactly 32 characters or type 'generate'.");
-            }
-        }
+        int EnOrDe = 0;
+        while (EnOrDe == 0){
+            System.out.println("AES-256 CBC Mode; Would you like to encrypt or decrypt? (E/D): ");
+            String EorD = scanner.nextLine().trim();
+            if ("E".equalsIgnoreCase(EorD)){
+                EnOrDe = 1;
 
-        boolean gotIV = false;
-        while (gotIV == false){
-            System.out.println("Enter a 16-character IV or type 'generate' to create a random IV: ");
-            String input = scanner.nextLine().trim();
-            if ("generate".equalsIgnoreCase(input)){
-                iv = generateIV();
-                gotIV = true;
-            } 
-            else if (input.length() == 16){
-                iv = input.getBytes();
-                gotIV = true;
-            } 
+                boolean gotKey = false;
+                while (gotKey == false){
+                    System.out.println("Enter a 32-character key or type 'generate' to create a random key: ");
+                    String input = scanner.nextLine().trim(); // avoid trailing/leading spaces
+                    if ("generate".equalsIgnoreCase(input)){
+                        key = generateKey();
+                        gotKey = true;
+                    } 
+                    else if (input.length() == 32){
+                        key = input.getBytes();
+                        gotKey = true;
+                    }
+                    else {
+                        System.out.println("Invalid key length. Please enter exactly 32 characters or type 'generate'.");
+                    }
+                }
+        
+                boolean gotIV = false;
+                while (gotIV == false){
+                    System.out.println("Enter a 16-character IV or type 'generate' to create a random IV: ");
+                    String input = scanner.nextLine().trim();
+                    if ("generate".equalsIgnoreCase(input)){
+                        iv = generateIV();
+                        gotIV = true;
+                    } 
+                    else if (input.length() == 16){
+                        iv = input.getBytes();
+                        gotIV = true;
+                    } 
+                    else{
+                        System.out.println("Invalid IV length. Please enter exactly 16 characters or type 'generate'.");
+                    }
+                }
+        
+                boolean gotText = false;
+                while (gotText == false){
+                    System.out.println("Enter plaintext of any length to be encrypted: ");
+                    plaintext = scanner.nextLine();
+                    System.out.println("Is the following plaintext correct? (Y/N): " + "'" + plaintext + "'");
+                    String confirmation = scanner.nextLine().trim();
+                    if ("Y".equalsIgnoreCase(confirmation)){
+                        gotText = true;
+                    }
+                    else if ("N".equalsIgnoreCase(confirmation)){
+                        plaintext = "";
+                    }
+                    else{
+                        System.out.println("Invalid confirmation, type 'Y' or 'N'.");
+                    }
+                }
+        
+                int format = 0;
+                while (format == 0){
+                    System.out.println("Do you want your results in Base64 or Hex? (1 for Base64, 2 for Hex): ");
+                    String choice = scanner.nextLine().trim();
+                    if ("1".equals(choice)){
+                        format = 1;
+                    }
+                    else if ("2".equals(choice)){
+                        format = 2;
+                    }
+                    else{
+                        System.out.println("Invalid choice, type '1' or '2'. ");
+                    }
+                }
+        
+                byte[] encrypted = encrypt(plaintext, key, iv);
+        
+                if (format == 1){
+                    System.out.println("Key (Base64): " + Base64.getEncoder().encodeToString(key));
+                    System.out.println("IV (Base64): " + Base64.getEncoder().encodeToString(iv));
+                    System.out.println("Encrypted Ciphertext (Base64): " + Base64.getEncoder().encodeToString(encrypted));
+                }
+                else if (format == 2){
+                    System.out.println("Key (Hex): " + bytesToHex(key));
+                    System.out.println("IV (Hex): " + bytesToHex(iv));
+                    System.out.println("Encrypted Ciphertext (Hex): " + bytesToHex(encrypted));
+                    System.out.println("Decrypted Ciphertext (Hex): " + new String (decrypt(bytesToHex(encrypted), key, iv, format), StandardCharsets.UTF_8));
+                }
+            }
+            else if ("D".equalsIgnoreCase(EorD)){
+                EnOrDe = 2;
+                boolean gotKey = false;
+                while (gotKey == false){
+                    System.out.println("Enter a 32-character key: ");
+                    String input = scanner.nextLine().trim(); // avoid trailing/leading spaces
+                    if (input.length() == 32){
+                        key = input.getBytes();
+                        gotKey = true;
+                    }
+                    else {
+                        System.out.println("Invalid key length. Please enter exactly 32 characters or type 'generate'.");
+                    }
+                }
+        
+                boolean gotIV = false;
+                while (gotIV == false){
+                    System.out.println("Enter a 16-character IV: ");
+                    String input = scanner.nextLine().trim();
+                    if (input.length() == 16){
+                        iv = input.getBytes();
+                        gotIV = true;
+                    } 
+                    else{
+                        System.out.println("Invalid IV length. Please enter exactly 16 characters or type 'generate'.");
+                    }
+                }
+        
+                boolean gotText = false;
+                while (gotText == false){
+                    System.out.println("Enter your ciphertext (Base64 and Hex accepted): ");
+                    ciphertext = scanner.nextLine();
+                    System.out.println("Is the following ciphertext correct? (Y/N): " + "'" + ciphertext + "'");
+                    String confirmation = scanner.nextLine().trim();
+                    if ("Y".equalsIgnoreCase(confirmation)){
+                        gotText = true;
+                    }
+                    else if ("N".equalsIgnoreCase(confirmation)){
+                        ciphertext = "";
+                    }
+                    else{
+                        System.out.println("Invalid confirmation, type 'Y' or 'N'.");
+                    }
+                }
+        
+                int format = 0;
+                while (format == 0){
+                    System.out.println("Is your ciphertext in Base64 or Hex? (1 for Base64, 2 for Hex): ");
+                    String choice = scanner.nextLine().trim();
+                    if ("1".equals(choice)){
+                        format = 1;
+                    }
+                    else if ("2".equals(choice)){
+                        format = 2;
+                    }
+                    else{
+                        System.out.println("Invalid choice, type '1' or '2'. ");
+                    }
+                }
+        
+                byte[] decrypted = decrypt(ciphertext, key, iv, format);
+        
+                if (format == 1){
+                    System.out.println("Key (Base64): " + Base64.getEncoder().encodeToString(key));
+                    System.out.println("IV (Base64): " + Base64.getEncoder().encodeToString(iv));
+                    System.out.println("Decrypted Ciphertext (Plaintext): " + new String (decrypted, StandardCharsets.UTF_8));
+                }
+                else if (format == 2){
+                    System.out.println("Key (Hex): " + bytesToHex(key));
+                    System.out.println("IV (Hex): " + bytesToHex(iv));
+                    System.out.println("Decrypted Ciphertext (Plaintext): " + new String (decrypted, StandardCharsets.UTF_8));
+                }
+            }
             else{
-                System.out.println("Invalid IV length. Please enter exactly 16 characters or type 'generate'.");
+                System.out.println("Invalid option, type 'E' for encrypt or 'D' for decrypt.");
             }
         }
 
-        boolean gotText = false;
-        while (gotText == false){
-            System.out.println("Enter plaintext of any length to be encrypted: ");
-            plaintext = scanner.nextLine();
-            System.out.println("Is the following plaintext correct? (Y/N): " + "'" + plaintext + "'");
-            String confirmation = scanner.nextLine().trim();
-            if ("Y".equalsIgnoreCase(confirmation)){
-                gotText = true;
-            }
-            else if ("N".equalsIgnoreCase(confirmation)){
-                plaintext = "";
-            }
-            else{
-                System.out.println("Invalid confirmation, type 'Y' or 'N'.");
-            }
-        }
-
-        int format = 0;
-        while (format == 0){
-            System.out.println("Do you want your results in Base64 or Hex? (1 for Base64, 2 for Hex): ");
-            String choice = scanner.nextLine().trim();
-            if ("1".equals(choice)){
-                format = 1;
-            }
-            else if ("2".equals(choice)){
-                format = 2;
-            }
-            else{
-                System.out.println("Invalid choice, type '1' or '2'. ");
-            }
-        }
-
-        byte[] encrypted = encrypt(plaintext, key, iv);
-
-        if (format == 1){
-            System.out.println("Key (Base64): " + Base64.getEncoder().encodeToString(key));
-            System.out.println("IV (Base64): " + Base64.getEncoder().encodeToString(iv));
-            System.out.println("Encrypted Ciphertext (Base64): " + Base64.getEncoder().encodeToString(encrypted));
-        }
-        else if (format == 2){
-            System.out.println("Key (Hex): " + bytesToHex(key));
-            System.out.println("IV (Hex): " + bytesToHex(iv));
-            System.out.println("Encrypted Ciphertext (Hex): " + bytesToHex(encrypted));
-        }
+        
         scanner.close();
     }
 
-    private static String bytesToHex(byte[] bytes){
+    public static String bytesToHex(byte[] bytes){
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes){
             String hex = Integer.toHexString(0xFF & b);
@@ -179,7 +276,7 @@ public class AES{ // AES-256, CBC, PKCS7
         return cipher(plaintextBytes, keySchedule, iv);
     }
 
-    public static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
+    private static byte[] cipher(byte[] input, byte[] keySchedule, byte[] iv){
         byte[] output = new byte[input.length];
         byte[] previousBlock = Arrays.copyOf(iv, iv.length); // Start with the IV
 
@@ -198,7 +295,7 @@ public class AES{ // AES-256, CBC, PKCS7
         return output;
     }
 
-    public static byte[] encryptBlock(byte[] input, byte[] keySchedule){ // old cipher/NIST cipher
+    private static byte[] encryptBlock(byte[] input, byte[] keySchedule){ // old cipher/NIST cipher
         byte[] state = Arrays.copyOf(input, input.length);
     
         addRoundKey(state, Arrays.copyOfRange(keySchedule, 0, 16));
@@ -227,7 +324,7 @@ public class AES{ // AES-256, CBC, PKCS7
     }
 
 
-    public static byte[] keyExpansion(byte[] key){
+    private static byte[] keyExpansion(byte[] key){
         int Nb = 4;
         int Nk = key.length / 4;
         int Nr = Nk + 6;
@@ -280,20 +377,20 @@ public class AES{ // AES-256, CBC, PKCS7
         return input;
     }
 
-    public static void addRoundKey(byte[] state, byte[] roundKey){
+    private static void addRoundKey(byte[] state, byte[] roundKey){
         for (int i = 0; i < state.length; i++){
             state[i] ^= roundKey[i];
         }
     }
 
-    public static void subBytes(byte[] state){
+    private static void subBytes(byte[] state){
         for (int i = 0; i < state.length; i++){
             state[i] = (byte) sBox[state[i] & 0xFF];
         }
     }
 
     /*
-    public static void shiftRows(byte[] state){
+    private static void shiftRows(byte[] state){
         byte[] shiftedState = new byte[16];
         for (int i = 0; i < 16; i++){
             int row = i / 4;
@@ -304,7 +401,7 @@ public class AES{ // AES-256, CBC, PKCS7
         System.arraycopy(shiftedState, 0, state, 0, state.length);
     }
     */
-    public static void shiftRows(byte[] state){
+    private static void shiftRows(byte[] state){
         byte[] temp = new byte[16];
     
         temp[0] = state[0];
@@ -330,7 +427,7 @@ public class AES{ // AES-256, CBC, PKCS7
         System.arraycopy(temp, 0, state, 0, 16);
     }    
 
-    public static void mixColumns(byte[] state){
+    private static void mixColumns(byte[] state){
         byte[] mixedState = new byte[16];
         
         for (int i = 0; i < 4; i++){
@@ -379,4 +476,135 @@ public class AES{ // AES-256, CBC, PKCS7
         random.nextBytes(ivBytes);
         return ivBytes;
     }
+
+    //DECRYPTION METHODS
+    private static void invSubBytes(byte[] state){
+        for (int i = 0; i < state.length; i++){
+            state[i] = invSBox[state[i] & 0xFF];
+        }
+    }
+    
+    private static void invShiftRows(byte[] state){
+        byte[] temp = new byte[16];
+    
+        temp[0] = state[0];
+        temp[4] = state[4];
+        temp[8] = state[8];
+        temp[12] = state[12];
+    
+        temp[1] = state[13];
+        temp[5] = state[1];
+        temp[9] = state[5];
+        temp[13] = state[9];
+    
+        temp[2] = state[10];
+        temp[6] = state[14];
+        temp[10] = state[2];
+        temp[14] = state[6];
+    
+        temp[3] = state[7];
+        temp[7] = state[11];
+        temp[11] = state[15];
+        temp[15] = state[3];
+    
+        System.arraycopy(temp, 0, state, 0, 16);
+    }
+    
+    private static void invMixColumns(byte[] state){
+        byte[] temp = new byte[16];
+    
+        for (int i = 0; i < 4; i++){
+            int columnBase = i * 4;
+            byte s0 = state[columnBase];
+            byte s1 = state[columnBase + 1];
+            byte s2 = state[columnBase + 2];
+            byte s3 = state[columnBase + 3];
+    
+            temp[columnBase] = (byte) (gmul(s0, (byte) 0x0e) ^ gmul(s1, (byte) 0x0b) ^ gmul(s2, (byte) 0x0d) ^ gmul(s3, (byte) 0x09));
+            temp[columnBase + 1] = (byte) (gmul(s0, (byte) 0x09) ^ gmul(s1, (byte) 0x0e) ^ gmul(s2, (byte) 0x0b) ^ gmul(s3, (byte) 0x0d));
+            temp[columnBase + 2] = (byte) (gmul(s0, (byte) 0x0d) ^ gmul(s1, (byte) 0x09) ^ gmul(s2, (byte) 0x0e) ^ gmul(s3, (byte) 0x0b));
+            temp[columnBase + 3] = (byte) (gmul(s0, (byte) 0x0b) ^ gmul(s1, (byte) 0x0d) ^ gmul(s2, (byte) 0x09) ^ gmul(s3, (byte) 0x0e));
+        }
+    
+        System.arraycopy(temp, 0, state, 0, 16);
+    }
+    
+    private static byte[] decipher(byte[] ciphertext, byte[] key, byte[] iv){
+        byte[] plaintext = new byte[ciphertext.length];
+        byte[] previousBlock = Arrays.copyOf(iv, iv.length);
+        byte[] keySchedule = keyExpansion(key);
+    
+        for (int i = 0; i < ciphertext.length; i += 16){
+            byte[] block = Arrays.copyOfRange(ciphertext, i, i + 16);
+            byte[] decryptedBlock = decryptBlock(block, keySchedule);
+            for (int j = 0; j < 16; j++){
+                decryptedBlock[j] ^= previousBlock[j];
+            }
+            System.arraycopy(decryptedBlock, 0, plaintext, i, 16);
+            previousBlock = Arrays.copyOfRange(ciphertext, i, i + 16);
+        }
+        return plaintext;
+    }
+
+    private static byte[] decryptBlock(byte[] block, byte[] keySchedule){
+        byte[] state = Arrays.copyOf(block, block.length);
+
+        addRoundKey(state, Arrays.copyOfRange(keySchedule, 14 * 16, 15 * 16));
+
+        for (int round = 13; round >= 0; round--){
+            invShiftRows(state);
+            invSubBytes(state);
+            addRoundKey(state, Arrays.copyOfRange(keySchedule, round * 16, (round + 1) * 16));
+            if (round > 0){
+                invMixColumns(state);
+            }
+        }
+
+        return state;
+    }
+
+    private static byte[] removePadding(byte[] plaintext){
+        int paddingValue = plaintext[plaintext.length - 1];
+        int lengthWithoutPadding = plaintext.length - paddingValue;
+        byte[] unpadded = Arrays.copyOf(plaintext, lengthWithoutPadding);
+        return unpadded;
+    }
+
+    public static byte[] hexToBytes(String s) {
+        s = s.replaceAll("\\s", "").toUpperCase();
+    
+        int len = s.length();
+
+        // Check if the string length is odd
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("Invalid hex string.");
+        }
+    
+        byte[] bytes = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            // Using Integer.parseInt to handle parsing and catch any non-hex characters
+            int byteValue = Integer.parseInt(s.substring(i, i + 2), 16);
+            bytes[i / 2] = (byte) byteValue;
+        }
+        return bytes;
+    }
+
+    public static byte[] decrypt(String ciphertext, byte[] key, byte[] iv, int format) throws Exception{
+        byte[] ciphertextBytes = new byte[0];
+        byte[] keySchedule = new byte[0];
+        byte[] plaintextBytes = new byte[0];
+        if (format == 1){
+            ciphertextBytes = Base64.getDecoder().decode(ciphertext);
+            //System.out.println("ciphertextBytes: " + Arrays.toString(ciphertextBytes));
+            keySchedule = keyExpansion(key);
+            plaintextBytes = decipher(ciphertextBytes, keySchedule, iv);
+        }
+        else{ // format == 2
+            ciphertextBytes = hexToBytes(ciphertext);
+            //System.out.println("ciphertextBytes: " + Arrays.toString(ciphertextBytes));
+            keySchedule = keyExpansion(key);
+            plaintextBytes = decipher(ciphertextBytes, keySchedule, iv);
+        }
+        return removePadding(plaintextBytes);
+    }    
 }
