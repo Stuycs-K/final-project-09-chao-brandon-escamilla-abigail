@@ -45,7 +45,7 @@ Rcon, or Round Constants, is a series of predetermined values that are used to g
 Rcon is used to introduce greater variety for key generation, and it makes sure each round key is unique. Rcon helps to prevent key-related attacks.
 
 ### Sbox
-SBox, or substitution box, is a tool used during substitution operations to replace one byte for another. It is essentially a table or look-up box, where every byte value from 0x00 to 0xFF leads to a different byte output. 
+SBox, or substitution box, is a tool used during substitution operations to replace one byte for another. It is essentially a table or 16 x 16 Matrix that serves as a look-up box, where every byte value from 0x00 to 0xFF leads to a different byte output.
 It is meant to further introduce confusion into the encryption process to stop and disrupt any patterns that may form. 
 
 ## What are keys and rounds in AES?
@@ -65,8 +65,11 @@ Here's how it works:
 The key expansion generates a total amount of X `words`, where X is the initial set of words from the key, multiplied by the number of rounds plus one. 
 
 Here is the typical equation used to express this equation, where `Nb` is the initial set of words (also referred to as the number of columns comprising the state) and `Nr` is the number of rounds.
+
 `X = Nb (Nr + 1)`
+
 In the case of AES-256,  there are 14 rounds and 4 initial words so:
+
 `X  =  4 x (14+1) = 60 words` 
 
 The key schedule then, for AES-256, is `60 words`, or 240 bytes.
@@ -80,19 +83,23 @@ To generate a new key, the previous round key is taken and XORed against Rcon, b
 
 ### ECB
 Electronic Code Book (ECB) is the simplest block cipher mode of AES because it encrypts every block of plaintext data separately. Because the other blocks do not rely on previous ciphertext blocks for encryption, it is the least secure of all the modes. When AES uses ECB mode, identical plaintext blocks will result in identical ciphertext blocks, which can hinder security, as it is easier to identify identical blocks and guess the original. 
-(example here if time permits)
+
 Although ECB is faster and easier to implement, it is much more limited in terms of encryption and security.
 
 ### CBC
-Cipher block chaining is the most commonly used mode when using AES. Unlike EBC, CBC uses previous ciphertext blocks for the encryption of the next block. 
+Cipher block chaining is the most commonly used mode when using AES. Unlike EBC, CBC uses previous ciphertext blocks for the encryption of the next block. Each plaintext block is XORed against the ciphertext of the previous block encrypted, meaning each block affects every other block after it. 
+It also requires the use of an IV to encrypt the first block, which also ensures randomness and greater security. There is greater security in CBC mode, but it is slower to process because of the way the blocks are dependent on each other for encryption.  
 
 ### CFB
+CFB is Cipher Feedback Mode and is similar to CBC in which it also requires an IV and has ciphertext blocks dependent on previous blocks. In CFB, previous ciphertext blocks are encrypted and XORed with the plaintext to make the ciphertext. 
 
 ### OFB
+Output feedback mode uses the encryption of the previous ciphertext to generate a keystream. This keystream is then XORed against the plaintext to produce the ciphertext, similar to CFB. 
 
 ### CTR
+Counter mode takes a counter value that is encrypted and XORs it with the plaintext to produce the ciphertext. Like ECB, CTR mode does not rely on previous blocks for encryption and can encrypt blocks independently though parallel encryption. Since the counter values are different between blocks, there is no direct relationship between different plaintext and ciphertext blocks.
 
-(info here)
+However, using counter may make it more difficult to retrieve the plaintext as both sides, those receiving and sending the message, must keep track of the counter separately. 
 
 ## Operations in AES
 AES consists of several rounds that use four main functions to encrypt blocks of plaintext. The following operations are done in every round except for MixColumns, which is omitted from the final round.
@@ -102,8 +109,8 @@ AES consists of several rounds that use four main functions to encrypt blocks of
   * AddRoundKey
 
 ### SubBytes
-The SubBytes operation uses substitution to change each byte of the block with another block according to a specific fixed table. This table is known as the substitution box, or `S-box`. Each byte is substituted independently from the others within each block. 
-The `S-box` is a 16 x 16 Matrix (insert image here). This substitution method is meant to make it harder to find patterns in encrypted data.
+The SubBytes operation uses substitution to change each byte of the block with another block according to the specific fixed table, the Sbox. Each byte is substituted independently from the others within each block. 
+This substitution method is meant to make it harder to find patterns in encrypted data.
 
 ### ShiftRows
 In this transformation, bytes in each row of the block are repeatedly shifted to the left. The first row remains the same, while the second row shifts over one, the third shifts over two, and the last row shifts over three. (insert image here)
