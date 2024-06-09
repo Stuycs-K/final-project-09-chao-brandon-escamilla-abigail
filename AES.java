@@ -57,10 +57,10 @@ public class AES{ // AES-256, CBC, PKCS7
         System.out.println("Known Encrypted: " + Base64.getEncoder().encodeToString(encrypted2) + " Length: " + Base64.getEncoder().encodeToString(encrypted2).length());
         System.out.println("According to website, the answer should be: MKKN/VNcTEOqXx+PhrLNR7WrPNQsaNGa+cgjSLZuF9Q= Length: " + "MKKN/VNcTEOqXx+PhrLNR7WrPNQsaNGa+cgjSLZuF9Q=".length());
 
-        byte[] cryptoToolKey = new byte[] {0x71, 0x77, 0x65, 0x72, 0x74, 0x79, 0x75, 0x69, 0x6F, 0x70, 0x61, 0x73, 0x64, 0x66, 0x67, 0x68, 0x6A, 0x6B, 0x6C, 0x7A, 0x78, 0x63, 0x76, 0x62, 0x6E, 0x6D, 0x71, 0x77, 0x65, 0x72, 0x74, 0x79, 0x30, (byte)0xE5, (byte)0xD3, 0x3F, 0x44, (byte)0x9C, (byte)0xA6, 0x56, 0x2B, (byte)0xEC, (byte)0xC7, 0x25, 0x4F, (byte)0x8A, (byte)0xA0, 0x4D, (byte)0xEE, 0x15, (byte)0x8C, (byte)0x99, (byte)0x96, 0x76, (byte)0xFA, (byte)0xFB, (byte)0xF8, 0x1B, (byte)0x8B, (byte)0x8C, (byte)0x9D, 0x69, (byte)0xFF, (byte)0xF5, (byte)0xCB, (byte)0xF3, 0x35, 0x61, (byte)0x8F, 0x6F, (byte)0x93, 0x37, (byte)0xA4, (byte)0x83, 0x54, 0x12, (byte)0xEB, 0x09, (byte)0xF4, 0x5F, 0x07, 0x14, 0x33, 0x56, (byte)0x91, 0x62, (byte)0xC9, (byte)0xAD, 0x69, 0x79, 0x42, 0x21, (byte)0xF4, 0x10, (byte)0xBD, (byte)0xD4, 0x05, (byte)0x89, 0x7D, (byte)0xDE, (byte)0x8A, (byte)0xE6, (byte)0xEE, (byte)0xE9, 0x2E, 0x65, (byte)0xBA, (byte)0xFB, (byte)0xC5, 0x6C, 0x4E, (byte)0xA4, (byte)0xA1, 0x44, 0x1C, 0x1F, 0x30, 0x26, (byte)0xD5, (byte)0xB2, 0x59, 0x5F, (byte)0x97, (byte)0x93, (byte)0xAD, 0x4F, 0x2A, 0x47, (byte)0x89, 0x6C, (byte)0xDD, 0x4B, 0x03, (byte)0x8A, 0x33, (byte)0xA2, 0x2D, (byte)0xEF, (byte)0x89, 0x59, (byte)0xE8, (byte)0x83, (byte)0xC7, (byte)0xFD, 0x3A, (byte)0xA8, (byte)0xDA, 0x4B, 0x0A, (byte)0x8E, 0x0F, (byte)0xF9, 0x53, (byte)0xD1, (byte)0x98, 0x6A, (byte)0xFE, (byte)0x9E, (byte)0xB2, 0x2D, (byte)0x92, 0x5B, 0x05, (byte)0xF0, (byte)0x91, (byte)0xD1, 0x36, 0x52, (byte)0xBC, 0x3E, (byte)0xBF, 0x0B, 0x54, (byte)0xBD, 0x78, (byte)0xF6, 0x1A, (byte)0xD2, 0x66, 0x09, 0x10, 0x5C, 0x69, (byte)0xF0, 0x43, (byte)0x8D, (byte)0xF1, (byte)0x9A, (byte)0xBD, 0x13, 0x43, (byte)0xB7, (byte)0xCF, 0x41, (byte)0xAC, (byte)0x8A, 0x5E, (byte)0x90, (byte)0x9A, (byte)0xD8, (byte)0xE2, (byte)0xAE, 0x25, (byte)0xD3, (byte)0xB6, 0x13, 0x5D, 0x25, 0x54, (byte)0xAF, 0x2A, 0x36, 0x44, (byte)0xF3, 0x43, (byte)0xC6, 0x07, 0x7E, (byte)0xB2, 0x5C, (byte)0xBA, 0x6D, (byte)0xF1, (byte)0xEB, (byte)0xB3, (byte)0xE0, 0x45, 0x7E, (byte)0xED, 0x70, (byte)0xDF, (byte)0xA6, 0x0F, (byte)0xDE, (byte)0xFA, 0x75, (byte)0xB9, (byte)0xCD, (byte)0xA7, 0x50};
-        System.out.println("cryptoTool keySchedule" + Arrays.toString(cryptoToolKey));
-        byte[] encrypted3 = cipher(pad(plaintext.getBytes()), cryptoToolKey, knownIV.getBytes());
-        System.out.println("New Encrypted: " + Base64.getEncoder().encodeToString(encrypted3) + " Length: " + Base64.getEncoder().encodeToString(encrypted3).length());
+        //byte[] cryptoToolKey = new byte[] {0x71, 0x77, 0x65, 0x72, 0x74, 0x79, 0x75, 0x69, 0x6F, 0x70, 0x61, 0x73, 0x64, 0x66, 0x67, 0x68, 0x6A, 0x6B, 0x6C, 0x7A, 0x78, 0x63, 0x76, 0x62, 0x6E, 0x6D, 0x71, 0x77, 0x65, 0x72, 0x74, 0x79, 0x30, (byte)0xE5, (byte)0xD3, 0x3F, 0x44, (byte)0x9C, (byte)0xA6, 0x56, 0x2B, (byte)0xEC, (byte)0xC7, 0x25, 0x4F, (byte)0x8A, (byte)0xA0, 0x4D, (byte)0xEE, 0x15, (byte)0x8C, (byte)0x99, (byte)0x96, 0x76, (byte)0xFA, (byte)0xFB, (byte)0xF8, 0x1B, (byte)0x8B, (byte)0x8C, (byte)0x9D, 0x69, (byte)0xFF, (byte)0xF5, (byte)0xCB, (byte)0xF3, 0x35, 0x61, (byte)0x8F, 0x6F, (byte)0x93, 0x37, (byte)0xA4, (byte)0x83, 0x54, 0x12, (byte)0xEB, 0x09, (byte)0xF4, 0x5F, 0x07, 0x14, 0x33, 0x56, (byte)0x91, 0x62, (byte)0xC9, (byte)0xAD, 0x69, 0x79, 0x42, 0x21, (byte)0xF4, 0x10, (byte)0xBD, (byte)0xD4, 0x05, (byte)0x89, 0x7D, (byte)0xDE, (byte)0x8A, (byte)0xE6, (byte)0xEE, (byte)0xE9, 0x2E, 0x65, (byte)0xBA, (byte)0xFB, (byte)0xC5, 0x6C, 0x4E, (byte)0xA4, (byte)0xA1, 0x44, 0x1C, 0x1F, 0x30, 0x26, (byte)0xD5, (byte)0xB2, 0x59, 0x5F, (byte)0x97, (byte)0x93, (byte)0xAD, 0x4F, 0x2A, 0x47, (byte)0x89, 0x6C, (byte)0xDD, 0x4B, 0x03, (byte)0x8A, 0x33, (byte)0xA2, 0x2D, (byte)0xEF, (byte)0x89, 0x59, (byte)0xE8, (byte)0x83, (byte)0xC7, (byte)0xFD, 0x3A, (byte)0xA8, (byte)0xDA, 0x4B, 0x0A, (byte)0x8E, 0x0F, (byte)0xF9, 0x53, (byte)0xD1, (byte)0x98, 0x6A, (byte)0xFE, (byte)0x9E, (byte)0xB2, 0x2D, (byte)0x92, 0x5B, 0x05, (byte)0xF0, (byte)0x91, (byte)0xD1, 0x36, 0x52, (byte)0xBC, 0x3E, (byte)0xBF, 0x0B, 0x54, (byte)0xBD, 0x78, (byte)0xF6, 0x1A, (byte)0xD2, 0x66, 0x09, 0x10, 0x5C, 0x69, (byte)0xF0, 0x43, (byte)0x8D, (byte)0xF1, (byte)0x9A, (byte)0xBD, 0x13, 0x43, (byte)0xB7, (byte)0xCF, 0x41, (byte)0xAC, (byte)0x8A, 0x5E, (byte)0x90, (byte)0x9A, (byte)0xD8, (byte)0xE2, (byte)0xAE, 0x25, (byte)0xD3, (byte)0xB6, 0x13, 0x5D, 0x25, 0x54, (byte)0xAF, 0x2A, 0x36, 0x44, (byte)0xF3, 0x43, (byte)0xC6, 0x07, 0x7E, (byte)0xB2, 0x5C, (byte)0xBA, 0x6D, (byte)0xF1, (byte)0xEB, (byte)0xB3, (byte)0xE0, 0x45, 0x7E, (byte)0xED, 0x70, (byte)0xDF, (byte)0xA6, 0x0F, (byte)0xDE, (byte)0xFA, 0x75, (byte)0xB9, (byte)0xCD, (byte)0xA7, 0x50};
+        //System.out.println("cryptoTool keySchedule" + Arrays.toString(cryptoToolKey));
+        //byte[] encrypted3 = cipher(pad(plaintext.getBytes()), cryptoToolKey, knownIV.getBytes());
+        //System.out.println("New Encrypted: " + Base64.getEncoder().encodeToString(encrypted3) + " Length: " + Base64.getEncoder().encodeToString(encrypted3).length());
     }
 
     private static String bytesToHex(byte[] bytes){
@@ -113,18 +113,29 @@ public class AES{ // AES-256, CBC, PKCS7
 
     public static byte[] encryptBlock(byte[] input, byte[] keySchedule){ // old cipher/NIST cipher
         byte[] state = Arrays.copyOf(input, input.length);
-
+    
+        addRoundKey(state, Arrays.copyOfRange(keySchedule, 0, 16));
+    
         for (int round = 1; round < 14; round++){
+            System.out.println("Start of round " + round + ": " + bytesToHex(state));
             subBytes(state);
+            System.out.println("After subBytes: " + bytesToHex(state));
             shiftRows(state);
+            System.out.println("After shiftRows: " + bytesToHex(state));
             mixColumns(state);
+            System.out.println("After mixColumns: " + bytesToHex(state));
             addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * round, 16 * (round + 1)));
+            System.out.println("After XOR/addRoundKey: " + bytesToHex(state));
         }
 
+        System.out.println("Start of round final: " + bytesToHex(state));
         subBytes(state);
+        System.out.println("After subBytes: " + bytesToHex(state));
         shiftRows(state);
+        System.out.println("After shiftRows: " + bytesToHex(state));
         addRoundKey(state, Arrays.copyOfRange(keySchedule, 16 * 14, 16 * 15));
-
+        System.out.println("After XOR/addRoundKey: " + bytesToHex(state));
+    
         return state;
     }
 
@@ -143,25 +154,25 @@ public class AES{ // AES-256, CBC, PKCS7
             System.arraycopy(expandedKey, (i - 1) * 4, temp, 0, 4);
     
             if (i % Nk == 0){
-                System.out.println("Before rotateWord: " + Arrays.toString(temp));
+                //System.out.println("Before rotateWord: " + Arrays.toString(temp));
                 temp = rotateWord(temp);
-                System.out.println("After rotateWord: " + Arrays.toString(temp));
+                //System.out.println("After rotateWord: " + Arrays.toString(temp));
                 temp = subWord(temp);
-                System.out.println("After subWord: " + Arrays.toString(temp));
+                //System.out.println("After subWord: " + Arrays.toString(temp));
                 temp[0] ^= rCon[rconIter][0];
-                System.out.println("After rCon: " + Arrays.toString(temp) + " with rCon[" + rconIter + "][0]: " + rCon[rconIter][0]);
+                //System.out.println("After rCon: " + Arrays.toString(temp) + " with rCon[" + rconIter + "][0]: " + rCon[rconIter][0]);
                 rconIter++;
             }
             else if (Nk > 6 && i % Nk == 4){
                 temp = subWord(temp);
-                System.out.println("After additional subWord: " + Arrays.toString(temp));
+                //System.out.println("After additional subWord: " + Arrays.toString(temp));
             }
     
             for (int j = 0; j < 4; j++){
-                System.out.println("XORing: " + temp[j] + " with " + expandedKey[(i - Nk) * 4 + j] + ", which is at " + (i - Nk) * 4 + j);
+                //System.out.println("XORing: " + temp[j] + " with " + expandedKey[(i - Nk) * 4 + j] + ", which is at " + (i - Nk) * 4 + j);
                 expandedKey[i * 4 + j] = (byte) (expandedKey[(i - Nk) * 4 + j] ^ temp[j]);
             }
-            System.out.println("New keys added: " + Arrays.toString(Arrays.copyOfRange(expandedKey, i * 4, i * 4 + 4)));
+            //System.out.println("New keys added: " + Arrays.toString(Arrays.copyOfRange(expandedKey, i * 4, i * 4 + 4)));
         }
     
         System.out.println("Final expanded key: " + Arrays.toString(expandedKey));
@@ -194,6 +205,7 @@ public class AES{ // AES-256, CBC, PKCS7
         }
     }
 
+    /*
     public static void shiftRows(byte[] state){
         byte[] shiftedState = new byte[16];
         for (int i = 0; i < 16; i++){
@@ -204,6 +216,32 @@ public class AES{ // AES-256, CBC, PKCS7
 
         System.arraycopy(shiftedState, 0, state, 0, state.length);
     }
+    */
+    public static void shiftRows(byte[] state){
+        byte[] temp = new byte[16];
+    
+        temp[0] = state[0];
+        temp[4] = state[4];
+        temp[8] = state[8];
+        temp[12] = state[12];
+    
+        temp[1] = state[5];
+        temp[5] = state[9];
+        temp[9] = state[13];
+        temp[13] = state[1];
+    
+        temp[2] = state[10];
+        temp[6] = state[14];
+        temp[10] = state[2];
+        temp[14] = state[6];
+    
+        temp[3] = state[15];
+        temp[7] = state[3];
+        temp[11] = state[7];
+        temp[15] = state[11];
+    
+        System.arraycopy(temp, 0, state, 0, 16);
+    }    
 
     public static void mixColumns(byte[] state){
         byte[] mixedState = new byte[16];
