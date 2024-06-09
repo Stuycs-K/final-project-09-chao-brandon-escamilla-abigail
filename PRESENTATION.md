@@ -57,7 +57,7 @@ Example: keyfor256needtobe32characterslon
 Split into words would look like this:
 keyf 	or25 	6nee 	dtob 	e32c 	hara 	cter 	slon
 
-In the process of encryption, the key is split into several other smaller keys using a key expansion routine. These smaller keys, known as round keys, are each used for separate rounds of encryption, which is determined by a generated key schedule.
+In the process of encryption, the key is split into several other smaller keys using a key expansion routine. These smaller keys, known as round keys, are each used for separate rounds of encryption, which are determined by a generated key schedule.
 
 ## How does key expansion work?
 Key expansion is a routine performed within AES to generate the key schedule. 
@@ -91,15 +91,15 @@ Cipher block chaining is the most commonly used mode when using AES. Unlike EBC,
 It also requires the use of an IV to encrypt the first block, which also ensures randomness and greater security. There is greater security in CBC mode, but it is slower to process because of the way the blocks are dependent on each other for encryption.  
 
 ### CFB
-CFB is Cipher Feedback Mode and is similar to CBC in which it also requires an IV and has ciphertext blocks dependent on previous blocks. In CFB, previous ciphertext blocks are encrypted and XORed with the plaintext to make the ciphertext. 
+CFB is Cipher Feedback Mode and is similar to CBC in that it also requires an IV and has ciphertext blocks dependent on previous blocks. In CFB, previous ciphertext blocks are encrypted and XORed with the plaintext to make the ciphertext. 
 
 ### OFB
 Output feedback mode uses the encryption of the previous ciphertext to generate a keystream. This keystream is then XORed against the plaintext to produce the ciphertext, similar to CFB. 
 
 ### CTR
-Counter mode takes a counter value that is encrypted and XORs it with the plaintext to produce the ciphertext. Like ECB, CTR mode does not rely on previous blocks for encryption and can encrypt blocks independently though parallel encryption. Since the counter values are different between blocks, there is no direct relationship between different plaintext and ciphertext blocks.
+Counter mode takes a counter value that is encrypted and XORs it with the plaintext to produce the ciphertext. Like ECB, CTR mode does not rely on previous blocks for encryption and can encrypt blocks independently through parallel encryption. Since the counter values are different between blocks, there is no direct relationship between different plaintext and ciphertext blocks.
 
-However, using counter may make it more difficult to retrieve the plaintext as both sides, those receiving and sending the message, must keep track of the counter separately. 
+However, using a counter may make it more difficult to retrieve the plaintext as both sides, those receiving and sending the message, must keep track of the counter separately. 
 
 ## Operations in AES
 AES consists of several rounds that use four main functions to encrypt blocks of plaintext. The following operations are done in every round except for MixColumns, which is omitted from the final round.
@@ -121,17 +121,28 @@ MixColumns uses Matrix multiplication and multiplies a constant matrix with each
 ### Add Round Key
 The block data in the state array is XORed against the given key generated and passes on that state array as input to the next step.
 
-## To be added...
-Inverse AES Functions (decryption)
+## How secure exactly is AES?
+ AES is considered one of the most secure encryption algorithms used today, for several reasons. For one, the many operations used in AES enhance security by making the relationship between the ciphertext and plaintext as complex as possible, with the plaintext data affecting almost every part of the ciphertext. Especially in CBC mode, AES makes sure that small changes in the plaintext are reflected in large changes in the ciphertext, making it increasingly difficult to find patterns or predict the output. 
 
-Security of AES
+For example, if we use the plaintext `hello there` with the key `12345678901234561234567890123456` and encrypt it using AES-256 with mode CBC, the output would be:
 
-Why is it so good/secure?
+`y2YR2mlpziZEdGPC9HLlBQ==`
 
-Recent cyber attacks
+But if we change the plaintext just a small amount into "hello therf", and keep everything the same, the output is still completely different:
 
-AES cryptanalysis(?)
+`xBlePzEiFUMA1JJ7VH1e2Q==`
 
-How are keys securely distributed? (DH key exchange)
+### Analyzing AES
+There have been some attempts to crack AES in the past, which is extremely difficult given the type of encryption it implements. For one, it is practically impossible to brute force, as even with a smaller key like in AES-128, there would be thousands of possible combinations for keys. Additionally, brute-forcing would take up many resources computationally, and trying to implement it would be generally impractical. Other ways of trying to crack AES include analyzing the algorithm to find weaknesses and trying to exploit weaknesses through the key. 
 
-Possible future developments of aes(?)
+### Cryptanalysis
+
+### Key-related Attacks
+
+
+## Other Related Topics
+### How are keys securely distributed? 
+(DH key exchange)
+
+## Conclusion
+Considering the complexity and security of each version of AES, it is very likely this algorithm will continue to be commonly used to encrypt data. Since there is no currently conceivable way of cracking AES, it has been and will continue to be a standard in encrypting sensitive information.
