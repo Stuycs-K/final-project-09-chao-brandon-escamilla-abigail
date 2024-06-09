@@ -133,16 +133,16 @@ But if we change the plaintext just a small amount into "hello therf", and keep 
 `xBlePzEiFUMA1JJ7VH1e2Q==`
 
 ### Analyzing AES
-There have been some attempts to crack AES in the past, which is extremely difficult given the type of encryption it implements. For one, it is practically impossible to brute force, as even with a smaller key like in AES-128, there would be thousands of possible combinations for keys. Additionally, brute-forcing would take up many resources computationally, and trying to implement it would be generally impractical. Other ways of trying to crack AES include analyzing the algorithm to find weaknesses and trying to exploit weaknesses through the key. 
+Cracking AES has never been done before because of how difficult it is given the type of encryption AES implements. For one, it is practically impossible to brute force, as even with a smaller key like in AES-128, there would be thousands of possible combinations for keys. Brute-forcing would require testing every key by decrypting each block through every round and operation. It would take up too many resources computationally, and trying to implement it would be generally impractical. Because of this, the only real weakness AES has is key-related attacks, which do not affect the security of the algorithm itself. 
 
-### Cryptanalysis
-
-### Key-related Attacks
-
+However, there have been several attempts at attacks on AES, mostly through analyzing the AES algorithm and trying to exploit weaknesses through the key. So far though, the only attacks that have been published are entirely theoretical. Though they are computationally faster than a brute force attack, they are still not feasible and largely impractical.
 
 ## Other Related Topics
 ### How are keys securely distributed? 
-(DH key exchange)
+The distribution of the key is perhaps the most important aspect of being able to encrypt and decrypt AES. Because the key must remain secret and is only shared between the sending and receiving parties, many use the DH key exchange.
+The DH, or Diffie-Helman Key exchange is a secure method of exchanging keys by using both a private key and a public key.
+
+First, the two parties agree on public parameters which they alter with their secret key. Both parties then send their resulting key, which is public, to the other party. The two parties then combine their secret key again with the key they were given to make a new secret key. This way, both keys are the same, but neither of the two parties know about the other’s secret key, so no one can generate their final key. 
 
 ## Conclusion
 Considering the complexity and security of each version of AES, it is very likely this algorithm will continue to be commonly used to encrypt data. Since there is no currently conceivable way of cracking AES, it has been and will continue to be a standard in encrypting sensitive information.
