@@ -2,7 +2,6 @@
 # THIS DOCUMENT IS REQUIRED
 ## Group Info
 
-(what goes here)
 Brandon Chao and Abigail Escamilla
 
 ## Overview
@@ -11,4 +10,4 @@ Our final project is the presentation and implementation of AES-256, a tool used
 
 ## Instructions
 
-The video will be availible here (insert later). The video will explain all of the information that is availible in the Presentation Markdown file. The implementation of the tool itself is availible as the java file "AES.java" with its own make file. This make file will run the program when inputting the command "make AES". (add to later?)
+The video(s) will be available [here] (https://drive.google.com/file/d/1RDACNe1QCrerhUBK7kidZzs5lbjNunVR/view?usp=sharing). The video will explain all of the information that is available in the Presentation Markdown file. The implementation of the tool itself is available as the java file "AES.java" with a provided make file. This make file will run the program when inputting the command "make AES".
