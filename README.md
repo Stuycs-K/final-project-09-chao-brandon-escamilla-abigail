@@ -10,4 +10,4 @@ Our final project is the presentation and implementation of AES-256, a tool used
 
 ## Instructions
 
-The video(s) will be available [here](https://drive.google.com/file/d/1RDACNe1QCrerhUBK7kidZzs5lbjNunVR/view?usp=sharing). The video will explain all of the information that is available in the Presentation Markdown file. The implementation of the tool itself is available as the java file "AES.java" with a provided make file. This make file will run the program when inputting the command "make AES".
+The video(s) will be available [here (P1)](https://drive.google.com/file/d/1RDACNe1QCrerhUBK7kidZzs5lbjNunVR/view?usp=sharing) and [here (P2)](https://drive.google.com/file/d/1F7BB05infInPcR06TS1QDcJxCW_2EsNu/view?usp=drive_link). The video will explain all of the information that is available in the Presentation Markdown file. The implementation of the tool itself is available as the java file "AES.java" with a provided make file. This make file will run the program when inputting the command "make AES".
