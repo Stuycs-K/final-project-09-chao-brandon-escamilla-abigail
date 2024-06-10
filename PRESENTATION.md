@@ -128,7 +128,7 @@ For example, if we use the plaintext `hello there` with the key `123456789012345
 
 `y2YR2mlpziZEdGPC9HLlBQ==`
 
-But if we change the plaintext just a small amount into "hello therf", and keep everything the same, the output is still completely different:
+But if we change the plaintext just a small amount into "hello therf", and keep everything the same, the output is virtually completely different:
 
 `xBlePzEiFUMA1JJ7VH1e2Q==`
 
@@ -142,7 +142,15 @@ However, there have been several attempts at attacks on AES, mostly through anal
 The distribution of the key is perhaps the most important aspect of being able to encrypt and decrypt AES. Because the key must remain secret and is only shared between the sending and receiving parties, many use the DH key exchange.
 The DH, or Diffie-Helman Key exchange is a secure method of exchanging keys by using both a private key and a public key.
 
-First, the two parties agree on public parameters which they alter with their secret key. Both parties then send their resulting key, which is public, to the other party. The two parties then combine their secret key again with the key they were given to make a new secret key. This way, both keys are the same, but neither of the two parties know about the other’s secret key, so no one can generate their final key. 
+First, the two parties agree on public parameters which they alter with their secret key. Both parties then send their resulting key, which is public, to the other party. The two parties then combine their secret key again with the key they were given to make a new secret key. This way, both keys are the same, but neither of the two parties know about the other’s secret key, so no one can generate their final key.
+
+### Significant Events in AES history
+The National Institute of Standards and Technology, NIST, proposed selecting a new encryption standard to replace DES in 1997. Fifteen algorithms were submitted from around the world, one of which being the Rijndael Block Cipher. After extensive evaluation, Rijndael, designed by Belgian cryptographers Vincent Rijment and Joan Daemen, was selected as the Advanced Encryption Standard.
+
+### How has AES held up against cyberattacks?
+Given that it's still the national standard, it's evident that it is still a strong cipher. Until recently, the most notable type of attack on the algorithm was a Biclique attack, which reduced the 2^256 complexity to 2^254.4. While that means it cut down the complexity by more than half and was significant faster than a brute force, the attack has no practical implications and didn't pose any significant threat. Recently, however, attack methods continue to advance. The Multiset Attack, which analyzes the ciphertext bytes and sees if they are "balanced", uses results from the analysis to find "distinguishers" that help predict how many rounds of AES it may have gone through, reducing the time complexity to 2^103 under optimal conditions. Low-Data Complexity Attacks target the issue of the absurdly high amount of data traditionally used when attacking AES, which has niche uses despite AES's diffusion and brings attacks closer to becoming practical.
+
+Beyond actually breaking through the cipher, some attacks involve gaining access to information used to encrypt and decrypt, such as obtaining a key from a side-channel attack. These attacks are more practical as the difficulty of this attack scales with how securely keys and initialization vectors are shared in a network.
 
 ## Conclusion
 Considering the complexity and security of each version of AES, it is very likely this algorithm will continue to be commonly used to encrypt data. Since there is no currently conceivable way of cracking AES, it has been and will continue to be a standard in encrypting sensitive information.
